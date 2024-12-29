@@ -1,0 +1,76 @@
+version: '3'
+
+services:
+  api:
+    container_name: 'api-${NODE_ENV}'
+    image: 'api-${NODE_ENV}'
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: ['./wait-for-postgres.sh', './docker-entrypoint.sh']
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=${NODE_ENV}
+    ports:
+      - 3000:3000
+    networks:
+      - declara_facil
+    volumes:
+      - /usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  frontend:
+    container_name: 'web-${NODE_ENV}'
+    image: 'web-${NODE_ENV}'
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 4200:4200
+    depends_on:
+      - api
+    networks:
+      - declara_facil
+    restart: unless-stopped
+
+  postgres:
+    container_name: postgres
+    image: postgres:alpine
+    networks:
+      - declara_facil
+    env_file:
+      - .env
+    environment:
+      - TYPEORM_CONFIG=/app/src/configs/typeorm.config.ts
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PG_DATA=/var/lib/postgresql/data
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+  adminer:
+    container_name: pgadmin
+    image: adminer
+    networks:
+      - declara_facil
+    restart: always
+    ports:
+      - 8080:8080
+
+networks:
+  declara_facil:
+    # name: declara_facil
+    driver: bridge
+
+volumes:
+  pg-data:

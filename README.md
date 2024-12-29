@@ -33,11 +33,11 @@ Certifique-se de ter o PostgreSQL instalado e rodando na sua máquina. Você pre
 
 4. Preencha as variáveis de ambiente no arquivo .env com os valores apropriados:
    ```bash
-	DATABASE_HOST=localhost
-	DATABASE_PORT=5432
-	DATABASE_USER=seu_usuario_postgres
-	DATABASE_PASSWORD=sua_senha_postgres
-	DATABASE_NAME=nome_do_banco_de_dados
+	POSTGRES_HOST=localhost
+	POSTGRES_PORT=5432
+	POSTGRES_USER=seu_usuario_postgres
+	POSTGRES_PASSWORD=sua_senha_postgres
+	POSTGRES_DB=nome_do_banco_de_dados
 
 	JWT_SECRET=seu_segredo_jwt
 
@@ -74,4 +74,3 @@ Certifique-se de ter o PostgreSQL instalado e rodando na sua máquina. Você pre
 
 4. Acesse o frontend no navegador:
 	http://localhost:4200
-
