@@ -1,16 +1,4 @@
 .my-orders-container {
-  padding: 20px 40px;
-
-  h1 {
-    font-size: 24px;
-    text-align: center;
-  }
-
-  h2 {
-    font-size: 20px;
-    text-align: center;
-  }
-
   .description {
     font-size: 16px;
     text-align: center;

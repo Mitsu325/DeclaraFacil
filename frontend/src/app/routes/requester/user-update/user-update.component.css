@@ -1,13 +1,8 @@
-.update-group {
-  padding: 20px 40px;
-}
-
 h1 {
-  font-size: 24px;
   background-color: #f2f3f7;
-  text-align: center; /* Centraliza o texto dentro do h1 */
   margin-top: 10px;
-  margin-bottom: 20px; /* Espaço abaixo do h1 */
+  margin-bottom: 20px;
+  /* Espaço abaixo do h1 */
 }
 
 .update-form {
@@ -25,7 +20,9 @@ h1 {
 }
 
 button[type="submit"] {
-  grid-column: span 2; /* Faz o botão de submit ocupar a largura total */
-  justify-self: center; /* Alinha o botão à direita */
+  grid-column: span 2;
+  /* Faz o botão de submit ocupar a largura total */
+  justify-self: center;
+  /* Alinha o botão à direita */
   border-radius: 10px;
 }

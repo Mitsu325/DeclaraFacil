@@ -9,7 +9,11 @@ import { environment } from '../../../../environments/environment';
 export class DeclarationsService {
   apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
+
+  getDeclarations(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/declarations`);
+  }
 
   getDeclarationsType(): Observable<any> {
     return this.http.get(`${this.apiUrl}/declarations/type`);

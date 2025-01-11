@@ -16,3 +16,7 @@ body {
   color: var(--mat-app-text-color);
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+main {
+  padding: 20px 40px;
+}

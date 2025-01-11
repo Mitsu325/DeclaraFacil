@@ -1,4 +1,4 @@
-<main class="profile-group">
+<main>
   <h1>Meu Perfil</h1>
 
   <div *ngIf="errorMessage" class="error-message">
@@ -106,11 +106,7 @@
       Editar meus dados
     </button>
 
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="openGenerateDeclarationConfirmDialog()"
-    >
+    <button mat-flat-button color="primary" (click)="openGenerateDeclarationConfirmDialog()">
       Excluir perfil
     </button>
   </div>

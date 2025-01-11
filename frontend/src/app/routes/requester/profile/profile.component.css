@@ -1,26 +1,26 @@
-.profile-group {
-  padding: 20px 40px;
+h1 {
+  background-color: #f2f3f7;
+  /* Centraliza o texto dentro do h1 */
+  margin-top: 10px;
+  margin-bottom: 20px;
+  /* Espaço abaixo do h1 */
 }
 
-h1 {
-  font-size: 24px;
-  background-color: #f2f3f7;
-  text-align: center; /* Centraliza o texto dentro do h1 */
-  margin-top: 10px;
-  margin-bottom: 20px; /* Espaço abaixo do h1 */
-}
 .profile-info {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; /* Centraliza os campos no container */
-  gap: 20px; /* Espaço entre os campos */
+  justify-content: center;
+  /* Centraliza os campos no container */
+  gap: 20px;
+  /* Espaço entre os campos */
   padding-top: 40px;
 }
 
 .form-field {
   display: flex;
   flex-direction: column;
-  width: 45%; /* Para que os campos fiquem em dupla */
+  width: 45%;
+  /* Para que os campos fiquem em dupla */
 }
 
 .field-label {
@@ -35,13 +35,17 @@ h1 {
 
 button {
   margin-top: 20px;
-  align-self: center; /* Centraliza o botão */
-  grid-column: span 2; /* Faz o botão de submit ocupar a largura total */
+  align-self: center;
+  /* Centraliza o botão */
+  grid-column: span 2;
+  /* Faz o botão de submit ocupar a largura total */
   border-radius: 10px;
 }
+
 /* Agrupamento de CPF, RG e Órgão Emissor */
 .cpf-rg-emissor-group {
   display: flex;
-  gap: 20px; /* Espaço entre cada campo */
+  gap: 20px;
+  /* Espaço entre cada campo */
   width: 92%;
 }

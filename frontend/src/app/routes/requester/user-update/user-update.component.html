@@ -1,4 +1,4 @@
-<main class="update-group">
+<main>
   <h1>Alterar meus dados</h1>
 
   <div *ngIf="errorMessage" class="error-message">
@@ -11,13 +11,7 @@
     <!-- Spinner de carregamento do Angular Material -->
   </div>
 
-  <form
-    *ngIf="!isLoading"
-    [formGroup]="updateForm"
-    (ngSubmit)="onSubmit()"
-    autocomplete="off"
-    class="update-form"
-  >
+  <form *ngIf="!isLoading" [formGroup]="updateForm" (ngSubmit)="onSubmit()" autocomplete="off" class="update-form">
     <!-- Campos do formulário -->
     <div class="update-form">
       <mat-form-field class="form-field" appearance="fill">
@@ -27,51 +21,27 @@
 
       <mat-form-field class="form-field" appearance="fill">
         <mat-label>Email</mat-label>
-        <input
-          matInput
-          formControlName="email"
-          type="email"
-          placeholder="Insira seu e-mail"
-        />
+        <input matInput formControlName="email" type="email" placeholder="Insira seu e-mail" />
       </mat-form-field>
 
       <mat-form-field class="form-field" appearance="fill">
         <mat-label>CPF</mat-label>
-        <input
-          matInput
-          formControlName="cpf"
-          placeholder="Insira seu CPF"
-          mask="000.000.000-00"
-        />
+        <input matInput formControlName="cpf" placeholder="Insira seu CPF" mask="000.000.000-00" />
       </mat-form-field>
 
       <mat-form-field class="form-field" appearance="fill">
         <mat-label>RG</mat-label>
-        <input
-          matInput
-          formControlName="rg"
-          placeholder="Insira seu RG"
-          mask="00.000.000-0"
-        />
+        <input matInput formControlName="rg" placeholder="Insira seu RG" mask="00.000.000-0" />
       </mat-form-field>
 
       <mat-form-field class="form-field" appearance="fill">
         <mat-label>Órgão Emissor</mat-label>
-        <input
-          matInput
-          formControlName="issuing_agency"
-          placeholder="Insira o órgão emissor"
-        />
+        <input matInput formControlName="issuing_agency" placeholder="Insira o órgão emissor" />
       </mat-form-field>
 
       <mat-form-field class="form-field" appearance="fill">
         <mat-label>Código Postal</mat-label>
-        <input
-          matInput
-          formControlName="postal_code"
-          placeholder="Insira o código postal"
-          mask="00000-000"
-        />
+        <input matInput formControlName="postal_code" placeholder="Insira o código postal" mask="00000-000" />
       </mat-form-field>
 
       <mat-form-field class="form-field" appearance="fill">
@@ -81,29 +51,17 @@
 
       <mat-form-field class="form-field" appearance="fill">
         <mat-label>Número da Casa</mat-label>
-        <input
-          matInput
-          formControlName="house_number"
-          placeholder="Insira o número da casa"
-        />
+        <input matInput formControlName="house_number" placeholder="Insira o número da casa" />
       </mat-form-field>
 
       <mat-form-field class="form-field" appearance="fill">
         <mat-label>Complemento</mat-label>
-        <input
-          matInput
-          formControlName="complement"
-          placeholder="Insira o complemento"
-        />
+        <input matInput formControlName="complement" placeholder="Insira o complemento" />
       </mat-form-field>
 
       <mat-form-field class="form-field" appearance="fill">
         <mat-label>Bairro</mat-label>
-        <input
-          matInput
-          formControlName="neighborhood"
-          placeholder="Insira o bairro"
-        />
+        <input matInput formControlName="neighborhood" placeholder="Insira o bairro" />
       </mat-form-field>
 
       <mat-form-field class="form-field" appearance="fill">
@@ -116,17 +74,12 @@
         <mat-select formControlName="state">
           <mat-option *ngFor="let state of states" [value]="state">{{
             state
-          }}</mat-option>
+            }}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
     <!-- Botão de submit com loader -->
-    <button
-      mat-flat-button
-      color="primary"
-      type="submit"
-      [disabled]="isLoading || updateForm.invalid"
-    >
+    <button mat-flat-button color="primary" type="submit" [disabled]="isLoading || updateForm.invalid">
       <ng-container *ngIf="isLoading">Salvando...</ng-container>
       <ng-container *ngIf="!isLoading">Salvar</ng-container>
     </button>

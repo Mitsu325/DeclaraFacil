@@ -1,53 +1,39 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav mode="side" opened>
     <mat-nav-list>
-      <mat-expansion-panel
-        *ngIf="isAdmin"
-        [expanded]="currentOpenItem === 'requests'"
-        (opened)="toggleMenu('requests')"
-        (closed)="toggleMenu(null)"
-      >
+      @if (isAdmin) {
+      <mat-expansion-panel [expanded]="currentOpenItem === 'requests'" (opened)="toggleMenu('requests')"
+        (closed)="toggleMenu(null)">
         <mat-expansion-panel-header>
-          <mat-panel-title
-            ><mat-icon
-              aria-hidden="true"
-              aria-label=""
-              fontIcon="description"
-              class="icon"
-            ></mat-icon
-            >Solicitações</mat-panel-title
-          >
+          <mat-panel-title><mat-icon aria-hidden="true" aria-label="" fontIcon="pending_actions"
+              class="icon"></mat-icon>Solicitações</mat-panel-title>
         </mat-expansion-panel-header>
         <mat-list-item>
           <a mat-line [routerLink]="['/requests']">Gestão</a>
         </mat-list-item>
         <mat-list-item>
-          <a mat-line [routerLink]="['/requests/summary']"
-            >Declarações geradas</a
-          >
+          <a mat-line [routerLink]="['/requests/summary']">Declarações geradas</a>
         </mat-list-item>
       </mat-expansion-panel>
+
+      <mat-list-item>
+        <div class="align-item">
+          <mat-icon aria-hidden="true" aria-label="" fontIcon="assignment" class="icon"></mat-icon>
+          <a mat-line [routerLink]="['/declarations']">Declarações</a>
+        </div>
+      </mat-list-item>
+      }
 
       @if (!isAdmin) {
       <mat-list-item>
         <div class="align-item">
-          <mat-icon
-            aria-hidden="true"
-            aria-label=""
-            fontIcon="list"
-            class="icon"
-          ></mat-icon>
+          <mat-icon aria-hidden="true" aria-label="" fontIcon="list" class="icon"></mat-icon>
           <a mat-line [routerLink]="['/my-orders']">Meus pedidos</a>
         </div>
       </mat-list-item>
       <mat-list-item>
         <div class="align-item">
-          <mat-icon
-            aria-hidden="true"
-            aria-label=""
-            fontIcon="manage_accounts"
-            class="icon"
-          ></mat-icon>
+          <mat-icon aria-hidden="true" aria-label="" fontIcon="manage_accounts" class="icon"></mat-icon>
           <a mat-line [routerLink]="['/profile']">Meu perfil</a>
         </div>
       </mat-list-item>
@@ -94,12 +80,7 @@
 
       <mat-list-item>
         <div class="align-item">
-          <mat-icon
-            aria-hidden="false"
-            aria-label="Example home icon"
-            fontIcon="logout"
-            class="icon"
-          ></mat-icon>
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="logout" class="icon"></mat-icon>
           <a mat-line (click)="logout()">Sair</a>
         </div>
       </mat-list-item>

@@ -1,10 +1,11 @@
+import { SignatureType } from "./declaration.type";
+
 export type requestStatus = 'pending' | 'processing' | 'completed' | 'rejected';
-export type signatureType = 'director' | 'requester';
 
 export interface DeclarationRequestType {
   id: string;
   declaration: string;
-  declarationSignature: signatureType;
+  declarationSignature: SignatureType;
   name: string;
   requestDate: Date;
   status: requestStatus;

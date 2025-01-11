@@ -5,13 +5,25 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Declaration } from './declaration.entity';
+import { Declaration, SignatureType } from './declaration.entity';
 import { CreateDeclarationDto } from './dto/create-declaration.dto'; // Importar o DTO
 import { UsersService } from 'src/users/users.service';
 
 export interface FormatDeclarationTypes {
   id: string;
   type: string;
+}
+
+export interface FormatDeclaration {
+  id: string;
+  type: string;
+  title: string;
+  content: string;
+  footer: string;
+  signatureType: SignatureType;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
 }
 
 @Injectable()
@@ -21,10 +33,22 @@ export class DeclarationService {
 
     @InjectRepository(Declaration)
     private declarationRepository: Repository<Declaration>,
-  ) {}
+  ) { }
 
-  async getDeclarations(): Promise<Declaration[]> {
-    return await this.declarationRepository.find();
+  async getDeclarations(): Promise<FormatDeclaration[]> {
+    const declarations = await this.declarationRepository.find();
+
+    return declarations.map((declaration) => ({
+      id: declaration.id,
+      type: declaration.type,
+      title: declaration.title,
+      content: declaration.content,
+      footer: declaration.footer,
+      signatureType: declaration.signature_type,
+      createdBy: declaration.user.name,
+      createdAt: declaration.createdAt,
+      updatedAt: declaration.updatedAt,
+    }));
   }
 
   async getDeclarationsType(): Promise<FormatDeclarationTypes[]> {

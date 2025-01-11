@@ -1,1 +1,42 @@
-<p>declarations</p>
+<main class="declarations-container">
+  <h1>Declarações Cadastradas</h1>
+
+  @if (!dataSource.length) {
+  <p class="description">
+    Não foi cadastrado nenhuma declaração.
+  </p>
+  } @else {
+  <p class="description">
+    Visualize as declarações cadastradas.
+  </p>
+
+  <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="declaration">
+      <th mat-header-cell *matHeaderCellDef>Declaração</th>
+      <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="createdBy">
+      <th mat-header-cell *matHeaderCellDef>Criado por</th>
+      <td mat-cell *matCellDef="let element">{{ element.createdBy }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="updatedAt">
+      <th mat-header-cell *matHeaderCellDef>Data de atualização</th>
+      <td mat-cell *matCellDef="let element">{{ element.updatedAt | date : "dd/MM/yyyy HH:mm" }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell *matHeaderCellDef>Editar</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button aria-label="Editar declaração">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  }
+</main>

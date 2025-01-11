@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { DeclarationsComponent } from './routes/admin/declarations/declarations.component';
 import { AddressComponent } from './routes/requester/declaration/address/address.component';
 import { ClientsComponent } from './routes/admin/clients/clients.component';
-import { OtherDeclarationsComponent } from './routes/admin/other-declarations/other-declarations.component';
 import { RequestsComponent } from './routes/admin/requests/requests.component';
 import { AuthGuard } from './core/providers/auth.guard';
 import { SuccessComponent } from './routes/auth/register/success/success.component';
@@ -18,6 +17,7 @@ import { CompletedDeclarationsComponent } from './routes/admin/completed-declara
 import { UserUpdateComponent } from './routes/requester/user-update/user-update.component';
 import { ProfileComponent } from './routes/requester/profile/profile.component';
 import { SummaryComponent } from './routes/admin/requests/summary/summary.component';
+import { DeclarationEditComponent } from './routes/admin/declarations/declaration-edit/declaration-edit.component';
 
 export const routes: Routes = [
   {
@@ -86,6 +86,23 @@ export const routes: Routes = [
             path: 'update',
             component: UserUpdateComponent,
             title: 'Atualizar meus dados',
+          },
+        ],
+      },
+      {
+        path: 'declarations',
+        title: 'Declarações',
+        canActivate: [AdminGuard],
+        children: [
+          {
+            path: '',
+            component: DeclarationsComponent,
+            title: 'Declarações cadastradas',
+          },
+          {
+            path: ':id/edit',
+            component: DeclarationEditComponent,
+            title: 'Editar declaração',
           },
         ],
       },
