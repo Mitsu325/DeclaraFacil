@@ -89,6 +89,11 @@ export class DeclarationEditComponent {
   public childrenAccessor = (node: VariableNode) => node.children ?? [];
   public hasChild = (_: number, node: VariableNode) => !!node.children && node.children.length > 0;
   public isSubmitting: boolean = false;
+  public preview: boolean = false;
+  public contentLines: string[] = [];
+  public footerLines: string[] = [];
+  public signatureLines: string[] = [];
+
 
   private declarationId: string = '';
 
@@ -139,6 +144,56 @@ export class DeclarationEditComponent {
         );
       },
     });
+  }
+
+  generatePreview() {
+    this.preview = !this.preview;
+
+    const formValues = this.declarationForm.value;
+
+    const fakeValues = {
+      nome: 'João da Silva',
+      rua: 'Rua Exemplo',
+      numero_casa: '123',
+      complemento: 'Apto 101',
+      bairro: 'Centro',
+      cidade: 'São Paulo',
+      estado: 'SP',
+      cep: '01000-000',
+      data_atual: '11 de Janeiro de 2025',
+      rg: '12.345.678-9',
+      cpf: '123.456.789-01',
+      orgao_emissor: 'SSP-SP',
+      diretor_nome: 'Carlos Pereira',
+      diretor_cpf: '987.654.321-00',
+      diretor_cargo: 'Diretor Geral',
+    };
+
+
+    let signature = '';
+
+    switch (formValues.signatureType) {
+      case 'requester':
+        signature = `\n\n${fakeValues.nome}\nRG nº ${fakeValues.rg}/${fakeValues.orgao_emissor}\nCPF/MF nº ${fakeValues.cpf}`;
+        break;
+      case 'director':
+        signature = `\n\n${fakeValues.diretor_nome}\nCPF: ${fakeValues.diretor_cpf}\n${fakeValues.diretor_cargo}`;
+        break;
+      default:
+        break;
+    }
+
+    let contentWithValues = this.replaceDynamicValues(formValues.content, fakeValues);
+    let footerWithValues = this.replaceDynamicValues(formValues.footer, fakeValues);
+    let signatureWithValues = this.replaceDynamicValues(signature, fakeValues);
+
+    this.contentLines = contentWithValues.split('\n');
+    this.footerLines = footerWithValues.split('\n');
+    this.signatureLines = signatureWithValues.split('\n');
+  }
+
+  replaceDynamicValues(text: string, values: { [key: string]: string; }): string {
+    return text.replace(/\{\{(\w+)\}\}/g, (_, key) => values[key] || `{{${key}}}`);
   }
 
   onSubmit() {

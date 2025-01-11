@@ -26,6 +26,7 @@
   <mat-divider class="divider"></mat-divider>
 
   <form [formGroup]="declarationForm" (ngSubmit)="onSubmit()">
+    @if (!preview) {
     <mat-form-field class="form-field" appearance="fill">
       <mat-label>Nome da declaração</mat-label>
       <input matInput formControlName="type" placeholder="Exemplo: Declaração de Residência" />
@@ -65,8 +66,44 @@
         Selecione se o assinante é o <strong>Diretor</strong> ou o <strong>Solicitante</strong>.
       </mat-hint>
     </mat-form-field>
+    } @else {
+    <div class="pdf-container">
+      <div class="pdf-page">
+        <div class="pdf-header">
+          <h1>{{ declarationForm.value.title }}</h1>
+        </div>
 
-    <button class="button-flat" type="submit" mat-flat-button color="primary"
-      [disabled]="declarationForm.invalid || isSubmitting">{{ isSubmitting ? 'Salvando...' : 'Salvar' }}</button>
+        <div class="pdf-content">
+          <p *ngFor="let line of contentLines">{{ line }}</p>
+        </div>
+
+        <div class="pdf-footer">
+          <p *ngFor="let line of footerLines">{{ line }}</p>
+        </div>
+
+        <div class="pdf-signature">
+          <p *ngFor="let line of signatureLines">{{ line }}</p>
+        </div>
+
+        <div class="pdf-footer-bottom">
+          <p>
+            Rua Francisca Júlia, nº 290 - Santana - CEP 02403-010 - São Paulo - SP - Tel.: (11) 2281.0300 - CNPJ
+            02.090.452/0001-37
+          </p>
+          <p>{{"E-mail: adm@acnsf.org.br"}}</p>
+        </div>
+      </div>
+    </div>
+    }
+
+    <div class="button-group">
+      <button mat-stroked-button class="button-flat" type="button" color="accent" (click)="generatePreview()">{{ preview
+        ?
+        'Editar' :
+        'Pré-visualizar' }}</button>
+
+      <button class="button-flat" type="submit" mat-flat-button color="primary"
+        [disabled]="declarationForm.invalid || isSubmitting">{{ isSubmitting ? 'Salvando...' : 'Salvar' }}</button>
+    </div>
   </form>
 </main>
