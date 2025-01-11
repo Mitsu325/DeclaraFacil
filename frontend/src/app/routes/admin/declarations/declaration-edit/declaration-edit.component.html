@@ -1,0 +1,72 @@
+<main>
+  <h1>Editar declaração</h1>
+
+  <section>
+    <h2>Guia de Campos Dinâmicos</h2>
+    <p [innerHTML]="guideText"></p>
+
+    <mat-tree #tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+        <button mat-icon-button disabled></button>
+        {{node.name}}
+      </mat-tree-node>
+      <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding matTreeNodeToggle
+        [cdkTreeNodeTypeaheadLabel]="node.name">
+        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+          <mat-icon>
+            {{tree.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+        </button>
+        {{node.name}}
+      </mat-tree-node>
+    </mat-tree>
+
+  </section>
+
+  <mat-divider class="divider"></mat-divider>
+
+  <form [formGroup]="declarationForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="form-field" appearance="fill">
+      <mat-label>Nome da declaração</mat-label>
+      <input matInput formControlName="type" placeholder="Exemplo: Declaração de Residência" />
+      <mat-hint>O nome que identifica esta declaração.</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="form-field" appearance="fill">
+      <mat-label>Título da Declaração</mat-label>
+      <input matInput formControlName="title" placeholder="Exemplo: Declaração Oficial de Residência" />
+      <mat-hint>O título que será exibido no início do documento.</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="form-field" appearance="fill">
+      <mat-label>Corpo do Texto</mat-label>
+      <textarea matInput formControlName="content"
+        placeholder="Exemplo: Declaramos para os devidos fins que ..."></textarea>
+      <mat-hint>
+        Utilize as variáveis disponíveis para preencher dinamicamente os campos no corpo do texto.
+      </mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="form-field" appearance="fill">
+      <mat-label>Rodapé da Declaração</mat-label>
+      <input matInput formControlName="footer" placeholder="Exemplo: cidade, data" />
+      <mat-hint>
+        Inclua informações adicionais no rodapé.
+      </mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="form-field" appearance="fill">
+      <mat-label>Tipo de Assinante</mat-label>
+      <mat-select formControlName="signatureType">
+        <mat-option value="director">Diretor</mat-option>
+        <mat-option value="requester">Solicitante</mat-option>
+      </mat-select>
+      <mat-hint>
+        Selecione se o assinante é o <strong>Diretor</strong> ou o <strong>Solicitante</strong>.
+      </mat-hint>
+    </mat-form-field>
+
+    <button class="button-flat" type="submit" mat-flat-button color="primary"
+      [disabled]="declarationForm.invalid || isSubmitting">{{ isSubmitting ? 'Salvando...' : 'Salvar' }}</button>
+  </form>
+</main>

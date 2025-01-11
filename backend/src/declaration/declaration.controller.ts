@@ -20,7 +20,7 @@ import {
 @ApiTags('declarations')
 @Controller('declarations')
 export class DeclarationController {
-  constructor(private readonly declarationService: DeclarationService) {}
+  constructor(private readonly declarationService: DeclarationService) { }
 
   @ApiOperation({
     summary: 'Lista as declarações',
@@ -28,8 +28,23 @@ export class DeclarationController {
   })
   @ApiBearerAuth('access-token')
   @Get()
-  async get() {
+  async getAll() {
     return this.declarationService.getDeclarations();
+  }
+
+  @ApiOperation({
+    summary: 'Dados de uma declaração',
+    description: 'Retorna dados de uma declaração.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    description: 'ID da declaração',
+  })
+  @ApiBearerAuth('access-token')
+  @Get(':id')
+  async get(@Param() params: { id: string; },) {
+    return this.declarationService.getDeclaration(params.id);
   }
 
   @ApiOperation({
@@ -75,11 +90,11 @@ export class DeclarationController {
   @Patch(':id')
   async update(
     @Body() updateDeclarationDto: CreateDeclarationDto,
-    @Param() params: { id: string },
+    @Param() params: { id: string; },
     @Request() req,
   ) {
     return this.declarationService.updateDeclaration(
-      req.user.sub,
+      req.user.is_admin,
       params.id,
       updateDeclarationDto,
     );

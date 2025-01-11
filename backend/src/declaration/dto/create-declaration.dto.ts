@@ -1,24 +1,30 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum } from 'class-validator';
+import { SignatureType } from '../declaration.entity';
 
 export class CreateDeclarationDto {
   @IsString()
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ description: 'Nome da declaração' })
   type: string;
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ description: 'Título da declaração' })
   title: string;
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ description: 'Corpo do texto' })
   content: string;
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty()
+  @ApiProperty({ description: 'Rodapé da declaração' })
   footer: string;
+
+  @IsEnum(SignatureType)
+  @IsNotEmpty()
+  @ApiProperty({ enum: SignatureType, description: 'Tipo de assinante' })
+  signatureType: SignatureType;
 }

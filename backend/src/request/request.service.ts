@@ -68,7 +68,7 @@ export class RequestService {
       name: request.user.name,
       requestDate: request.createdAt,
       status: request.status,
-      declarationSignature: request.declaration.signature_type
+      declarationSignature: request.declaration.signatureType
     }));
   }
 
@@ -390,7 +390,7 @@ export class RequestService {
     declaration: Declaration,
     userData: Record<string, string>,
   ): string {
-    switch (declaration.signature_type) {
+    switch (declaration.signatureType) {
       case 'requester':
         declaration.footer = `${declaration.footer}\n \n{{nome}}\nRG nº {{rg}}/{{orgao_emissor}}\nCPF/MF nº {{cpf}}`;
         break;

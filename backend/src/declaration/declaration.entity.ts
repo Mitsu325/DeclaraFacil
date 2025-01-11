@@ -36,11 +36,12 @@ export class Declaration {
   footer: string;
 
   @Column({
+    name: 'signature_type',
     type: 'enum',
     enum: SignatureType,
     default: SignatureType.DIRECTOR,
   })
-  signature_type: SignatureType;
+  signatureType: SignatureType;
 
   @CreateDateColumn({
     name: 'created_at',

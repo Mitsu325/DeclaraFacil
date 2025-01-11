@@ -15,7 +15,20 @@ export class DeclarationsService {
     return this.http.get(`${this.apiUrl}/declarations`);
   }
 
+  getDeclaration(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/declarations/${id}`);
+  }
+
   getDeclarationsType(): Observable<any> {
     return this.http.get(`${this.apiUrl}/declarations/type`);
+  }
+
+  updateDeclaration(
+    id: string,
+    payload: any
+  ): Observable<any> {
+    const url = `${this.apiUrl}/declarations/${id}`;
+
+    return this.http.patch<any>(url, payload);
   }
 }
