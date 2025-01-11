@@ -1,5 +1,5 @@
 <main class="request-container">
-  <h1>Declaração de endereço</h1>
+  <h1>Solicitações</h1>
 
   @if (!dataSource.length) {
   <p class="description">Não foi solicitado nenhuma declaração.</p>
@@ -9,6 +9,11 @@
   </p>
 
   <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="declaration">
+      <th mat-header-cell *matHeaderCellDef>Declaração</th>
+      <td mat-cell *matCellDef="let element">{{ element.declaration }}</td>
+    </ng-container>
+
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Solicitante</th>
       <td mat-cell *matCellDef="let element">{{ element.name }}</td>
@@ -29,46 +34,27 @@
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>Seleção</th>
       <td mat-cell *matCellDef="let row">
-        <mat-checkbox
-          (click)="$event.stopPropagation()"
-          (change)="$event ? selection.toggle(row) : null"
-          [checked]="selection.isSelected(row)"
-        >
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)">
         </mat-checkbox>
       </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr
-      mat-row
-      *matRowDef="let row; columns: displayedColumns"
-      (click)="selection.toggle(row)"
-    ></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="selection.toggle(row)"></tr>
   </table>
 
   <div class="button-group">
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="openGenerateDeclarationConfirmDialog()"
-      [disabled]="!selection.selected.length"
-    >
+    <button mat-flat-button color="primary" (click)="openGenerateDeclarationConfirmDialog()"
+      [disabled]="!selection.selected.length">
       Gerar declarações
     </button>
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="openFinalizeDeclarationConfirmDialog('completed')"
-      [disabled]="!selection.selected.length"
-    >
+    <button mat-flat-button color="primary" (click)="openFinalizeDeclarationConfirmDialog('completed')"
+      [disabled]="!selection.selected.length">
       Finalizar solicitação
     </button>
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="openFinalizeDeclarationConfirmDialog('rejected')"
-      [disabled]="!selection.selected.length"
-    >
+    <button mat-flat-button color="primary" (click)="openFinalizeDeclarationConfirmDialog('rejected')"
+      [disabled]="!selection.selected.length">
       Rejeitar solicitação
     </button>
   </div>

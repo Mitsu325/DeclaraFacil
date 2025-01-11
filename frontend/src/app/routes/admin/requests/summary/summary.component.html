@@ -12,6 +12,11 @@
   </p>
 
   <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="declaration">
+      <th mat-header-cell *matHeaderCellDef>Tipo de declaração</th>
+      <td mat-cell *matCellDef="let element">{{ element.declaration }}</td>
+    </ng-container>
+
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Solicitante</th>
       <td mat-cell *matCellDef="let element">{{ element.name }}</td>

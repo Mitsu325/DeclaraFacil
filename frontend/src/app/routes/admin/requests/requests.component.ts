@@ -28,7 +28,7 @@ import { RequestsService } from '../../../shared/services/api/requests.service';
   styleUrl: './requests.component.css',
 })
 export class RequestsComponent {
-  displayedColumns: string[] = ['name', 'requestDate', 'status', 'select'];
+  displayedColumns: string[] = ['declaration', 'name', 'requestDate', 'status', 'select'];
   dataSource: DeclarationRequestType[] = [];
   selection = new SelectionModel<DeclarationRequestType>(true, []);
   dialog = inject(MatDialog);
@@ -38,7 +38,7 @@ export class RequestsComponent {
     private router: Router,
     private declarationRequestService: DeclarationRequestService,
     private requestsService: RequestsService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getRequests();
@@ -60,9 +60,8 @@ export class RequestsComponent {
   }
 
   checkboxLabel(row: DeclarationRequestType): string {
-    return `${
-      this.selection.isSelected(row) ? 'deselecionar' : 'selecionar'
-    } a pessoa ${row.name}`;
+    return `${this.selection.isSelected(row) ? 'deselecionar' : 'selecionar'
+      } a pessoa ${row.name}`;
   }
 
   openGenerateDeclarationConfirmDialog() {
@@ -79,13 +78,13 @@ export class RequestsComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.generateDeclarations(pendingRequests);
+      if (result.director) {
+        this.generateDeclarations(pendingRequests, result.director);
       }
     });
   }
 
-  generateDeclarations(pendingRequests: DeclarationRequestType[]) {
+  generateDeclarations(pendingRequests: DeclarationRequestType[], directorId: string) {
     if (pendingRequests.length === 0) {
       this.toast.info('Nenhuma declaração pendente para gerar.', 'Atenção');
       return;
@@ -98,7 +97,7 @@ export class RequestsComponent {
     this.declarationRequestService.setTotalRequest(pendingRequests.length);
 
     pendingRequests.forEach((request, index) => {
-      this.requestsService.generatePDF([request.id]).subscribe({
+      this.requestsService.generatePDF([request.id], directorId).subscribe({
         next: (response) => {
           this.declarationRequestService.setGeneratedDeclarations(response);
 
@@ -164,8 +163,7 @@ export class RequestsComponent {
           }
         });
         this.toast.success(
-          `Sua declaração foi ${
-            status === 'completed' ? 'finalizada' : 'rejeitada'
+          `Sua declaração foi ${status === 'completed' ? 'finalizada' : 'rejeitada'
           } com sucesso!`,
           `Declaração ${status === 'completed' ? 'Finalizada' : 'Rejeitada'}`,
           5000
@@ -173,8 +171,7 @@ export class RequestsComponent {
       },
       error: () => {
         this.toast.warning(
-          `Houve um erro ao ${
-            status === 'completed' ? 'finalizada' : 'rejeitada'
+          `Houve um erro ao ${status === 'completed' ? 'finalizada' : 'rejeitada'
           } a declaração.`,
           'Erro',
           5000

@@ -41,7 +41,7 @@ export class MyOrdersComponent implements OnInit {
   constructor(
     private requestsService: RequestsService,
     public dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadRequests();
@@ -80,7 +80,6 @@ export class MyOrdersComponent implements OnInit {
         this.loadRequests();
       },
       error: (error) => {
-        console.log('error', error);
         if (error.status === 409) {
           this.toast.danger(
             'Você já possui uma solicitação pendente desta declaração.',

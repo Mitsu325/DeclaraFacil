@@ -15,7 +15,7 @@
   </p>
 
   <ul class="request-list">
-    @for (pendingRequest of processingRequests; track pendingRequest.name) {
+    @for (pendingRequest of processingRequests; track pendingRequest.id) {
     <li>{{ pendingRequest.name }}</li>
     }
   </ul>
@@ -29,11 +29,7 @@
 </mat-dialog-content>
 <mat-dialog-actions class="action-group">
   <button mat-stroked-button mat-dialog-close>Cancelar</button>
-  <button
-    mat-flat-button
-    (click)="onConfirm()"
-    [disabled]="!processingRequests.length"
-  >
+  <button mat-flat-button (click)="onConfirm()" [disabled]="!processingRequests.length">
     Confirmar
   </button>
 </mat-dialog-actions>

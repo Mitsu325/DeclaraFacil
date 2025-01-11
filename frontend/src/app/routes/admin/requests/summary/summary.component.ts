@@ -16,11 +16,11 @@ import { NgToastService } from 'ng-angular-popup';
 })
 export class SummaryComponent {
   dataSource: DeclarationRequestType[] = [];
-  displayedColumns: string[] = ['name', 'generationDate', 'status', 'url'];
+  displayedColumns: string[] = ['declaration', 'name', 'generationDate', 'status', 'url'];
 
   toast = inject(NgToastService);
 
-  constructor(private requestsService: RequestsService) {}
+  constructor(private requestsService: RequestsService) { }
 
   ngOnInit() {
     this.getRequestsWithDeclarations();

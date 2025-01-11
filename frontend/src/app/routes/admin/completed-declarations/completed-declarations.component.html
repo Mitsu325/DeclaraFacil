@@ -2,10 +2,7 @@
   <h1>Declarações geradas</h1>
 
   @if (progressValue !== 100) {
-  <mat-progress-bar
-    mode="determinate"
-    [value]="progressValue"
-  ></mat-progress-bar>
+  <mat-progress-bar mode="determinate" [value]="progressValue"></mat-progress-bar>
   <p>{{ currentRequest }} de {{ totalRequest }} gerados...</p>
   } @else {
   <p>Declarações geradas com sucesso: {{ summary.success }}</p>
@@ -18,16 +15,12 @@
   } @else {
 
   <ul class="request-list">
-    @for (declaration of declarations; track declaration.name) {
+    @for (declaration of declarations; track declaration.id) {
     <li>
       <span>
         {{ declaration.name }}
       </span>
-      <button
-        mat-flat-button
-        *ngIf="declaration.url"
-        (click)="downloadFile(declaration.url)"
-      >
+      <button mat-flat-button *ngIf="declaration.url" (click)="downloadFile(declaration.url)">
         <mat-icon>download</mat-icon>
         Download PDF
       </button>
@@ -37,8 +30,7 @@
   }
 
   <div class="pos-button">
-    <a mat-flat-button class="back-button" routerLink="/requests"
-      ><mat-icon>arrow_back</mat-icon> Voltar para solicitações</a
-    >
+    <a mat-flat-button class="back-button" routerLink="/requests"><mat-icon>arrow_back</mat-icon> Voltar para
+      solicitações</a>
   </div>
 </main>

@@ -9,7 +9,7 @@ import { environment } from '../../../../environments/environment';
 export class RequestsService {
   apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getRequests(): Observable<any> {
     return this.http.get(`${this.apiUrl}/requests`);
@@ -23,11 +23,12 @@ export class RequestsService {
     return this.http.get(`${this.apiUrl}/requests/with-declarations`);
   }
 
-  generatePDF(requestIds: string[]): Observable<any> {
+  generatePDF(requestIds: string[], directorId: string): Observable<any> {
     const url = `${this.apiUrl}/requests/generate-pdf`;
 
     const payload = {
-      requestIds: requestIds,
+      requestIds,
+      directorId
     };
 
     return this.http.post<any>(url, payload);

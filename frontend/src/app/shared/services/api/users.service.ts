@@ -9,7 +9,11 @@ import { environment } from '../../../../environments/environment';
 export class UsersService {
   apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
+
+  getAdmin(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users/admin`);
+  }
 
   deleteUser(password: string): Observable<any> {
     const url = `${this.apiUrl}/users/inactivate`;
