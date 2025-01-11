@@ -21,7 +21,7 @@ import { UpdateStatusDto } from './dto/update-status.dto';
 @ApiTags('requests')
 @Controller('requests')
 export class RequestController {
-  constructor(private readonly requestService: RequestService) {}
+  constructor(private readonly requestService: RequestService) { }
 
   @ApiOperation({
     summary: 'Retorna todas as solicitações',
@@ -81,7 +81,7 @@ export class RequestController {
   @ApiBearerAuth('access-token')
   @Post('/generate-pdf')
   async update(@Body() generatePdfDto: GeneratePdfDto, @Request() req) {
-    return this.requestService.generatePdf(req.user.sub, generatePdfDto);
+    return this.requestService.generatePdf(req.user.is_admin, req.user.sub, generatePdfDto);
   }
 
   @ApiOperation({

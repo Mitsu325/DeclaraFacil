@@ -9,6 +9,11 @@ import {
   ManyToOne,
 } from 'typeorm';
 
+export enum SignatureType {
+  DIRECTOR = 'director',
+  REQUESTER = 'requester',
+}
+
 @Entity('declarations')
 export class Declaration {
   @PrimaryGeneratedColumn('uuid')
@@ -29,6 +34,13 @@ export class Declaration {
 
   @Column()
   footer: string;
+
+  @Column({
+    type: 'enum',
+    enum: SignatureType,
+    default: SignatureType.DIRECTOR,
+  })
+  signature_type: SignatureType;
 
   @CreateDateColumn({
     name: 'created_at',

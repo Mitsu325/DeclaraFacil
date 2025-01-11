@@ -54,9 +54,11 @@ export class User {
   @Column({ default: false })
   is_admin: boolean;
 
-  // Novo campo para indicar se o usuário está ativo ou não
   @Column({ default: true })
   is_active: boolean;
+
+  @Column({ nullable: true })
+  job_title: string;
 
   @CreateDateColumn({
     name: 'created_at',

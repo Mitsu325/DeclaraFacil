@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) {}
+  ) { }
 
   // Criar novo usuário considerando usuários inativos
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -60,6 +60,18 @@ export class UsersService {
     return userWithoutPassword;
   }
 
+  async getAdmin(is_admin: boolean): Promise<Pick<User, 'id' | 'name'>[]> {
+    if (!is_admin) {
+      throw new ForbiddenException(
+        'You do not have permission to perform this action.',
+      );
+    }
+
+    const users = await this.findAdmin();
+
+    return users.map((user) => ({ id: user.id, name: user.name }));
+  }
+
   async isAdmin(id: string): Promise<boolean> {
     const user = await this.usersRepository.findOne({ where: { id } });
     return !!user.is_admin;
@@ -71,6 +83,10 @@ export class UsersService {
 
   async findByEmail(email: string): Promise<User | undefined> {
     return this.usersRepository.findOne({ where: { email } });
+  }
+
+  async findAdmin(): Promise<User[] | undefined> {
+    return this.usersRepository.find({ where: { is_admin: true } });
   }
 
   async findByIdentificationDocuments(

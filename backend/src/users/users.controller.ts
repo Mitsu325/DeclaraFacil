@@ -19,7 +19,7 @@ import { DeleteAccountDto } from './dto/delete-account.dto';
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @ApiOperation({
     summary: 'Dados do usuário',
@@ -29,6 +29,16 @@ export class UsersController {
   @Get()
   async get(@Request() req) {
     return this.usersService.getUser(req.user.sub);
+  }
+
+  @ApiOperation({
+    summary: 'Lista de admin',
+    description: 'Retorna os dados de usuário admin.',
+  })
+  @ApiBearerAuth('access-token')
+  @Get('admin')
+  async getAdmin(@Request() req) {
+    return this.usersService.getAdmin(req.user.is_admin);
   }
 
   @ApiOperation({
@@ -78,7 +88,7 @@ export class UsersController {
   async deactivateUser(
     @Request() req,
     @Body('password') password: string,
-  ): Promise<{ message: string }> {
+  ): Promise<{ message: string; }> {
     await this.usersService.deactivateUser(req.user.sub, password);
 
     return { message: 'Conta desativada com sucesso.' };

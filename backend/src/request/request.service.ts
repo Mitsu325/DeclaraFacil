@@ -17,9 +17,12 @@ import { DeclarationService } from 'src/declaration/declaration.service';
 import { GeneratePdfDto } from './dto/generate-pdf.dto';
 import { UploadFileService } from 'src/upload-file/upload-file.service';
 import { UpdateStatusDto } from './dto/update-status.dto';
+import { Declaration } from 'src/declaration/declaration.entity';
+import { User } from 'src/users/user.entity';
 
 export interface FormatRequestType {
   id: string;
+  declaration: string;
   name: string;
   requestDate: Date;
   status: RequestStatus;
@@ -45,7 +48,7 @@ export class RequestService {
 
     @InjectRepository(RequestEntity)
     private requestRepository: Repository<RequestEntity>,
-  ) {}
+  ) { }
 
   async getRequests(userId: string): Promise<FormatRequestType[]> {
     const user = await this.usersService.findById(userId);
@@ -61,9 +64,11 @@ export class RequestService {
 
     return requests.map((request: RequestEntity) => ({
       id: request.id,
+      declaration: request.declaration.type,
       name: request.user.name,
       requestDate: request.createdAt,
       status: request.status,
+      declarationSignature: request.declaration.signature_type
     }));
   }
 
@@ -89,6 +94,7 @@ export class RequestService {
 
     return requests.map((request: RequestEntity) => ({
       id: request.id,
+      declaration: request.declaration.type,
       name: request.user.name,
       requestDate: request.createdAt,
       url: request.url,
@@ -167,6 +173,7 @@ export class RequestService {
       const updatedRequest = await this.getRequestById(requestId);
       requests.push({
         id: requestId,
+        declaration: updatedRequest.declaration.type,
         name: updatedRequest.user.name,
         requestDate: updatedRequest.createdAt,
         status: updatedRequest.status,
@@ -219,41 +226,25 @@ export class RequestService {
   }
 
   async generatePdf(
+    isAdmin: boolean,
     userId: string,
     generatePdfDto: GeneratePdfDto,
   ): Promise<FormatRequestType[]> {
-    const { requestIds } = generatePdfDto;
-    const user = await this.usersService.findById(userId);
-    if (user && !user.is_admin) {
+    if (!isAdmin) {
       throw new ForbiddenException(
         'You do not have permission to perform this action',
       );
     }
 
-    const replacePlaceholders = (
-      template: string,
-      data: Record<string, string>,
-    ): string => {
-      return Object.entries(data).reduce((result, [key, value]) => {
-        return result.replace(new RegExp(`{{${key}}}`, 'g'), value);
-      }, template);
-    };
+    const { requestIds, directorId } = generatePdfDto;
+    const user = await this.usersService.findById(userId);
 
-    const formatDate = (date: Date): string => {
-      return format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
-    };
-
-    const formatCep = (cep) => {
-      const sanitizedCep = cep.replace(/\D/g, '');
-      const paddedCep = sanitizedCep.padStart(8, '0');
-      return `${paddedCep.slice(0, 5)}-${paddedCep.slice(5)}`;
-    };
-
-    const tmpDir = path.join(__dirname, '..', '..', 'tmp');
-
-    if (!fs.existsSync(tmpDir)) {
-      fs.mkdirSync(tmpDir);
+    let director: User;
+    if (directorId) {
+      director = await this.usersService.findById(directorId);
     }
+
+    const tmpDir = this.ensureTmpDir();
 
     const requests: FormatRequestType[] = [];
 
@@ -276,29 +267,14 @@ export class RequestService {
           continue;
         }
 
-        const userData = {
-          nome: requestData.user.name,
-          rua: requestData.user.street,
-          numero_casa: requestData.user.house_number,
-          complemento: requestData.user.complement
-            ? ` ${requestData.user.complement}`
-            : '',
-          bairro: requestData.user.neighborhood,
-          cidade: requestData.user.city,
-          estado: requestData.user.state,
-          cep: formatCep(requestData.user.postal_code),
-          data_atual: formatDate(new Date()),
-          rg: requestData.user.rg,
-          cpf: requestData.user.cpf,
-          orgao_emissor: requestData.user.issuing_agency,
-        };
+        const userData = this.buildUserData(requestData, director);
 
-        const modifiedContent = replacePlaceholders(
+        const modifiedContent = this.replacePlaceholders(
           declaration.content,
           userData,
         );
 
-        const footerContent = replacePlaceholders(declaration.footer, userData);
+        const footerContent = this.buildFooterContent(declaration, userData);
 
         const fileName = `${requestId}_${Date.now().toString()}.pdf`;
         const filePath = path.join(tmpDir, fileName);
@@ -330,6 +306,7 @@ export class RequestService {
         const updatedRequest = await this.getRequestById(requestId);
         requests.push({
           id: requestId,
+          declaration: updatedRequest.declaration.type,
           name: updatedRequest.user.name,
           requestDate: updatedRequest.createdAt,
           status: updatedRequest.status,
@@ -345,9 +322,90 @@ export class RequestService {
     return requests.filter((req) => req !== null);
   }
 
+  private replacePlaceholders(
+    template: string,
+    data: Record<string, string>,
+  ): string {
+    return Object.entries(data).reduce((result, [key, value]) => {
+      return result.replace(new RegExp(`{{${key}}}`, 'g'), value);
+    }, template);
+  };
+
+  private ensureTmpDir(): string {
+    const tmpDir = path.join(__dirname, '..', '..', 'tmp');
+    if (!fs.existsSync(tmpDir)) {
+      fs.mkdirSync(tmpDir);
+    }
+    return tmpDir;
+  }
+
+  private buildUserData(
+    requestData: RequestEntity,
+    director?: User,
+  ): Record<string, string> {
+    const formatDate = (date: Date): string => {
+      return format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+    };
+
+    const formatCep = (cep) => {
+      const sanitizedCep = cep.replace(/\D/g, '');
+      const paddedCep = sanitizedCep.padStart(8, '0');
+      return `${paddedCep.slice(0, 5)}-${paddedCep.slice(5)}`;
+    };
+
+    function formatCPF(cpf: string): string {
+      return cpf.replace(/\D/g, '')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{2})$/, '$1-$2');
+    }
+
+    function formatRG(rg: string): string {
+      return rg.replace(/\D/g, '')
+        .replace(/(\d{2})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1})$/, '$1-$2');
+    }
+
+    return {
+      nome: requestData.user.name,
+      rua: requestData.user.street,
+      numero_casa: requestData.user.house_number,
+      complemento: requestData.user.complement || '',
+      bairro: requestData.user.neighborhood,
+      cidade: requestData.user.city,
+      estado: requestData.user.state,
+      cep: formatCep(requestData.user.postal_code),
+      data_atual: formatDate(new Date()),
+      rg: formatRG(requestData.user.rg),
+      cpf: formatCPF(requestData.user.cpf),
+      orgao_emissor: requestData.user.issuing_agency,
+      diretor_nome: director?.name || '',
+      diretor_cpf: director ? formatCPF(director.cpf) : '',
+      diretor_cargo: director?.job_title || '',
+    };
+  }
+
+  private buildFooterContent(
+    declaration: Declaration,
+    userData: Record<string, string>,
+  ): string {
+    switch (declaration.signature_type) {
+      case 'requester':
+        declaration.footer = `${declaration.footer}\n \n{{nome}}\nRG nº {{rg}}/{{orgao_emissor}}\nCPF/MF nº {{cpf}}`;
+        break;
+      case 'director':
+        declaration.footer = `${declaration.footer}\n \n{{diretor_nome}}\nCPF: {{diretor_cpf}}\n{{diretor_cargo}}`;
+        break;
+      default:
+        break;
+    }
+    return this.replacePlaceholders(declaration.footer, userData);
+  }
+
   private async generatePdfFile(
     filePath: string,
-    declaration: any,
+    declaration: Declaration,
     modifiedContent: string,
     footerContent: string,
   ): Promise<Buffer> {
