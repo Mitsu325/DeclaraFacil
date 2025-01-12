@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DeclarationsService } from '../../../../shared/services/api/declarations.service';
 import { Declaration } from '../../../../shared/domain/declaration.type';
 import { NgToastService } from 'ng-angular-popup';
@@ -28,6 +28,7 @@ import { DeclarationPreviewComponent } from '../declaration-preview/declaration-
     MatDividerModule,
     DeclarationFieldsGuideComponent,
     DeclarationPreviewComponent,
+    RouterLink,
   ],
   templateUrl: './declaration-edit.component.html',
   styleUrl: './declaration-edit.component.css'

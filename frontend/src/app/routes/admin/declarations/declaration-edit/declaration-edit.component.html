@@ -53,13 +53,21 @@
     }
 
     <div class="button-group">
-      <button mat-stroked-button class="button-flat" type="button" color="accent" (click)="generatePreview()">{{ preview
-        ?
-        'Editar' :
-        'Pré-visualizar' }}</button>
+      <div>
+        <a mat-flat-button class="back-button" routerLink="/declarations"><mat-icon>arrow_back</mat-icon> Voltar para
+          declarações</a>
+      </div>
 
-      <button class="button-flat" type="submit" mat-flat-button color="primary"
-        [disabled]="declarationForm.invalid || isSubmitting">{{ isSubmitting ? 'Salvando...' : 'Salvar' }}</button>
+      <div>
+        <button mat-stroked-button class="button-flat" type="button" color="accent" (click)="generatePreview()">{{
+          preview
+          ?
+          'Editar' :
+          'Pré-visualizar' }}</button>
+
+        <button class="button-flat" type="submit" mat-flat-button color="primary"
+          [disabled]="declarationForm.invalid || isSubmitting">{{ isSubmitting ? 'Salvando...' : 'Salvar' }}</button>
+      </div>
     </div>
   </form>
 </main>
