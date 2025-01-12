@@ -33,6 +33,16 @@ export class DeclarationController {
   }
 
   @ApiOperation({
+    summary: 'Lista as declarações',
+    description: 'Retorna todas as declarações.',
+  })
+  @ApiBearerAuth('access-token')
+  @Get('type')
+  async getType() {
+    return this.declarationService.getDeclarationsType();
+  }
+
+  @ApiOperation({
     summary: 'Dados de uma declaração',
     description: 'Retorna dados de uma declaração.',
   })
@@ -45,16 +55,6 @@ export class DeclarationController {
   @Get(':id')
   async get(@Param() params: { id: string; },) {
     return this.declarationService.getDeclaration(params.id);
-  }
-
-  @ApiOperation({
-    summary: 'Lista as declarações',
-    description: 'Retorna todas as declarações.',
-  })
-  @ApiBearerAuth('access-token')
-  @Get('type')
-  async getType() {
-    return this.declarationService.getDeclarationsType();
   }
 
   @ApiOperation({

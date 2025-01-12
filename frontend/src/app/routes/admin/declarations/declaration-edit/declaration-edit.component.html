@@ -1,27 +1,7 @@
 <main>
   <h1>Editar declaração</h1>
 
-  <section>
-    <h2>Guia de Campos Dinâmicos</h2>
-    <p [innerHTML]="guideText"></p>
-
-    <mat-tree #tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
-      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-        <button mat-icon-button disabled></button>
-        {{node.name}}
-      </mat-tree-node>
-      <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding matTreeNodeToggle
-        [cdkTreeNodeTypeaheadLabel]="node.name">
-        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
-          <mat-icon>
-            {{tree.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-          </mat-icon>
-        </button>
-        {{node.name}}
-      </mat-tree-node>
-    </mat-tree>
-
-  </section>
+  <app-declaration-fields-guide></app-declaration-fields-guide>
 
   <mat-divider class="divider"></mat-divider>
 
@@ -67,33 +47,9 @@
       </mat-hint>
     </mat-form-field>
     } @else {
-    <div class="pdf-container">
-      <div class="pdf-page">
-        <div class="pdf-header">
-          <h1>{{ declarationForm.value.title }}</h1>
-        </div>
-
-        <div class="pdf-content">
-          <p *ngFor="let line of contentLines">{{ line }}</p>
-        </div>
-
-        <div class="pdf-footer">
-          <p *ngFor="let line of footerLines">{{ line }}</p>
-        </div>
-
-        <div class="pdf-signature">
-          <p *ngFor="let line of signatureLines">{{ line }}</p>
-        </div>
-
-        <div class="pdf-footer-bottom">
-          <p>
-            Rua Francisca Júlia, nº 290 - Santana - CEP 02403-010 - São Paulo - SP - Tel.: (11) 2281.0300 - CNPJ
-            02.090.452/0001-37
-          </p>
-          <p>{{"E-mail: adm@acnsf.org.br"}}</p>
-        </div>
-      </div>
-    </div>
+    <app-declaration-preview [title]="declarationForm.value.title" [content]="declarationForm.value.content"
+      [footer]="declarationForm.value.footer"
+      [signatureType]="declarationForm.value.signatureType"></app-declaration-preview>
     }
 
     <div class="button-group">

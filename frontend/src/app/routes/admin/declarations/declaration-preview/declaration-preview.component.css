@@ -1,0 +1,67 @@
+.pdf-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  margin: 20px auto;
+}
+
+.pdf-page {
+  width: 14cm;
+  height: 19.8cm;
+  padding: 1cm 1.5cm;
+  margin: 42px 0;
+  border: 1px solid #000;
+  background-color: #fff;
+  font-family: 'Times New Roman', serif;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.pdf-header h1 {
+  font-family: 'Times New Roman', serif;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  margin: 3cm 0 1cm;
+}
+
+.pdf-content {
+  margin: 0 0 0.8cm;
+}
+
+.pdf-content p {
+  text-indent: 40px;
+  font-size: 12px;
+  text-align: justify;
+  line-height: 18px;
+  white-space: pre-wrap;
+}
+
+.pdf-footer p {
+  text-align: center;
+  font-size: 12px;
+  line-height: 12px;
+  white-space: pre-wrap;
+}
+
+.pdf-signature p {
+  text-align: center;
+  font-size: 12px;
+  line-height: 12px;
+  white-space: pre-wrap;
+}
+
+.pdf-footer-bottom {
+  width: 100%;
+  position: absolute;
+  bottom: 0.5cm;
+  left: 50%;
+  transform: translateX(-50%);
+
+  p {
+    text-align: center;
+    font-size: 6px;
+    line-height: 8px;
+  }
+}

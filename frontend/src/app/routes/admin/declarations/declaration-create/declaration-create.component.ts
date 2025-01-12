@@ -3,20 +3,15 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatTreeModule } from '@angular/material/tree';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { DeclarationsService } from '../../../../shared/services/api/declarations.service';
-
-interface VariableNode {
-  name: string;
-  children?: VariableNode[];
-}
+import { DeclarationFieldsGuideComponent } from '../declaration-fields-guide/declaration-fields-guide.component';
+import { DeclarationPreviewComponent } from '../declaration-preview/declaration-preview.component';
 
 @Component({
   selector: 'app-declaration-create',
@@ -28,64 +23,19 @@ interface VariableNode {
     CommonModule,
     MatButtonModule,
     MatSelectModule,
-    MatExpansionModule,
-    MatTreeModule,
     MatIconModule,
     MatDividerModule,
+    DeclarationFieldsGuideComponent,
+    DeclarationPreviewComponent,
   ],
   templateUrl: './declaration-create.component.html',
   styleUrl: './declaration-create.component.css'
 })
 export class DeclarationCreateComponent {
   public declarationForm: FormGroup;
-  public guideText: string = `
-    Campos dinâmicos permitem personalizar seus documentos com informações variáveis.
-    Utilize a sintaxe básica colocando as palavras ou variáveis entre as chaves duplas <b>{{</b> e <b>}}</b>.
-    Por exemplo: <b>{{</b>nome<b>}}</b> para inserir o nome do solicitante ou <b>{{</b>data_atual<b>}}</b> para a data atual.
-  `;
-  public dataSource: VariableNode[] = [
-    {
-      name: 'Geral',
-      children: [{
-        name: '{{data_atual}}: Data atual'
-      }]
-    },
-    {
-      name: 'Solicitante',
-      children: [
-        { name: '{{nome}}: Nome' },
-        { name: '{{rua}}: Rua' },
-        { name: '{{numero_casa}}: Número da casa' },
-        { name: '{{complemento}}: Complemento da residência' },
-        { name: '{{bairro}}: Bairro' },
-        { name: '{{cidade}}: Cidade' },
-        { name: '{{estado}}: Estado' },
-        { name: '{{cep}}: CEP' },
-        { name: '{{data_atual}}: Data atual' },
-        { name: '{{rg}}: RG' },
-        { name: '{{cpf}}: CPF' },
-        { name: '{{orgao_emissor}}: Órgão emissor do RG' }
-      ]
-    },
-    {
-      name: 'Diretor',
-      children: [
-        { name: '{{diretor_nome}}: Nome' },
-        { name: '{{diretor_cpf}}: CPF' },
-        { name: '{{diretor_cargo}}: Cargo' }
-      ]
-    }
-  ];
-  public childrenAccessor = (node: VariableNode) => node.children ?? [];
-  public hasChild = (_: number, node: VariableNode) => !!node.children && node.children.length > 0;
+
   public isSubmitting: boolean = false;
   public preview: boolean = false;
-  public contentLines: string[] = [];
-  public footerLines: string[] = [];
-  public signatureLines: string[] = [];
-
-
-  private declarationId: string = '';
 
   toast = inject(NgToastService);
 
@@ -116,52 +66,6 @@ export class DeclarationCreateComponent {
 
   generatePreview() {
     this.preview = !this.preview;
-
-    const formValues = this.declarationForm.value;
-
-    const fakeValues = {
-      nome: 'João da Silva',
-      rua: 'Rua Exemplo',
-      numero_casa: '123',
-      complemento: 'Apto 101',
-      bairro: 'Centro',
-      cidade: 'São Paulo',
-      estado: 'SP',
-      cep: '01000-000',
-      data_atual: '11 de Janeiro de 2025',
-      rg: '12.345.678-9',
-      cpf: '123.456.789-01',
-      orgao_emissor: 'SSP-SP',
-      diretor_nome: 'Carlos Pereira',
-      diretor_cpf: '987.654.321-00',
-      diretor_cargo: 'Diretor Geral',
-    };
-
-
-    let signature = '';
-
-    switch (formValues.signatureType) {
-      case 'requester':
-        signature = `\n\n${fakeValues.nome}\nRG nº ${fakeValues.rg}/${fakeValues.orgao_emissor}\nCPF/MF nº ${fakeValues.cpf}`;
-        break;
-      case 'director':
-        signature = `\n\n${fakeValues.diretor_nome}\nCPF: ${fakeValues.diretor_cpf}\n${fakeValues.diretor_cargo}`;
-        break;
-      default:
-        break;
-    }
-
-    let contentWithValues = this.replaceDynamicValues(formValues.content, fakeValues);
-    let footerWithValues = this.replaceDynamicValues(formValues.footer, fakeValues);
-    let signatureWithValues = this.replaceDynamicValues(signature, fakeValues);
-
-    this.contentLines = contentWithValues.split('\n');
-    this.footerLines = footerWithValues.split('\n');
-    this.signatureLines = signatureWithValues.split('\n');
-  }
-
-  replaceDynamicValues(text: string, values: { [key: string]: string; }): string {
-    return text.replace(/\{\{(\w+)\}\}/g, (_, key) => values[key] || `{{${key}}}`);
   }
 
   onSubmit() {

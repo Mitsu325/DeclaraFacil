@@ -1,0 +1,21 @@
+<section>
+  <h2>Guia de Campos Dinâmicos</h2>
+  <p [innerHTML]="guideText"></p>
+
+  <mat-tree #tree [dataSource]="dataSource" [childrenAccessor]="childrenAccessor">
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+      <button mat-icon-button disabled></button>
+      {{node.name}}
+    </mat-tree-node>
+    <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding matTreeNodeToggle
+      [cdkTreeNodeTypeaheadLabel]="node.name">
+      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+        <mat-icon>
+          {{tree.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+        </mat-icon>
+      </button>
+      {{node.name}}
+    </mat-tree-node>
+  </mat-tree>
+
+</section>
