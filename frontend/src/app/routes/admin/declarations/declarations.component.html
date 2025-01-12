@@ -1,6 +1,14 @@
 <main class="declarations-container">
   <h1>Declarações Cadastradas</h1>
 
+  <div class="button-align">
+    <button mat-flat-button color="primary" (click)="declarationCreate()">
+      Criar Declaração
+    </button>
+  </div>
+
+  <mat-divider class="divider"></mat-divider>
+
   @if (!dataSource.length) {
   <p class="description">
     Não foi cadastrado nenhuma declaração.

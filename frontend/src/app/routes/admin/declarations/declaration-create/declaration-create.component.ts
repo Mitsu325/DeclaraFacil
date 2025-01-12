@@ -1,27 +1,25 @@
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DeclarationsService } from '../../../../shared/services/api/declarations.service';
-import { Declaration } from '../../../../shared/domain/declaration.type';
-import { NgToastService } from 'ng-angular-popup';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatTreeModule } from '@angular/material/tree';
-import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTreeModule } from '@angular/material/tree';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
+import { DeclarationsService } from '../../../../shared/services/api/declarations.service';
 
 interface VariableNode {
   name: string;
   children?: VariableNode[];
 }
 
-
 @Component({
-  selector: 'app-declaration-edit',
+  selector: 'app-declaration-create',
   standalone: true,
   imports: [
     MatFormFieldModule,
@@ -35,18 +33,10 @@ interface VariableNode {
     MatIconModule,
     MatDividerModule,
   ],
-  templateUrl: './declaration-edit.component.html',
-  styleUrl: './declaration-edit.component.css'
+  templateUrl: './declaration-create.component.html',
+  styleUrl: './declaration-create.component.css'
 })
-export class DeclarationEditComponent {
-  public declaration: Declaration = {
-    id: '',
-    content: '',
-    type: '',
-    title: '',
-    footer: '',
-    signatureType: 'director',
-  };
+export class DeclarationCreateComponent {
   public declarationForm: FormGroup;
   public guideText: string = `
     Campos dinâmicos permitem personalizar seus documentos com informações variáveis.
@@ -100,7 +90,6 @@ export class DeclarationEditComponent {
   toast = inject(NgToastService);
 
   constructor(
-    private route: ActivatedRoute,
     private fb: FormBuilder,
     private declarationsService: DeclarationsService,
     private router: Router,
@@ -123,27 +112,6 @@ export class DeclarationEditComponent {
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.declarationId = params['id'];
-      this.getDeclaration(this.declarationId);
-    });
-  }
-
-  getDeclaration(id: string) {
-    this.declarationsService.getDeclaration(id).subscribe({
-      next: (data) => {
-        this.declaration = data;
-        const { createdAt, updatedAt, ...update } = data;
-        this.declarationForm.patchValue(update);
-      },
-      error: () => {
-        this.toast.danger(
-          'Tente novamente',
-          'Falha ao carregar a declaração',
-          5000
-        );
-      },
-    });
   }
 
   generatePreview() {
@@ -208,15 +176,15 @@ export class DeclarationEditComponent {
 
     this.isSubmitting = true;
 
-    this.declarationsService.updateDeclaration(this.declarationId, this.declarationForm.value).subscribe({
+    this.declarationsService.createDeclaration(this.declarationForm.value).subscribe({
       next: () => {
-        this.toast.success('As modificações na declaração foram salvas com sucesso. Tudo pronto para seguir.', 'Alterações Salvas!', 5000);
+        this.toast.success('A declaração foi criada com sucesso e está pronta para ser visualizada ou editada.', 'Declaração Criada!', 5000);
         this.router.navigate(['/declarations']);
       },
       error: () => {
         this.toast.danger(
           'Tente novamente',
-          'Erro ao atualizar os dados.',
+          'Erro ao criar declaração.',
           5000
         );
       },

@@ -18,6 +18,7 @@ import { UserUpdateComponent } from './routes/requester/user-update/user-update.
 import { ProfileComponent } from './routes/requester/profile/profile.component';
 import { SummaryComponent } from './routes/admin/requests/summary/summary.component';
 import { DeclarationEditComponent } from './routes/admin/declarations/declaration-edit/declaration-edit.component';
+import { DeclarationCreateComponent } from './routes/admin/declarations/declaration-create/declaration-create.component';
 
 export const routes: Routes = [
   {
@@ -98,6 +99,11 @@ export const routes: Routes = [
             path: '',
             component: DeclarationsComponent,
             title: 'Declarações cadastradas',
+          },
+          {
+            path: 'create',
+            component: DeclarationCreateComponent,
+            title: 'Criar declaração',
           },
           {
             path: ':id/edit',

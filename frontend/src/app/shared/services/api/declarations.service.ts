@@ -23,6 +23,14 @@ export class DeclarationsService {
     return this.http.get(`${this.apiUrl}/declarations/type`);
   }
 
+  createDeclaration(
+    payload: any
+  ): Observable<any> {
+    const url = `${this.apiUrl}/declarations`;
+
+    return this.http.post<any>(url, payload);
+  }
+
   updateDeclaration(
     id: string,
     payload: any

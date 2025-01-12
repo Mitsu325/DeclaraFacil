@@ -7,11 +7,12 @@ import { DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-declarations',
   standalone: true,
-  imports: [MatTableModule, DatePipe, MatIconModule, MatButtonModule],
+  imports: [MatTableModule, DatePipe, MatIconModule, MatButtonModule, MatDividerModule],
   templateUrl: './declarations.component.html',
   styleUrl: './declarations.component.css',
 })
@@ -40,6 +41,10 @@ export class DeclarationsComponent {
         );
       },
     });
+  }
+
+  declarationCreate() {
+    this.router.navigate([`/declarations/create`]);
   }
 
   declarationEdit(id: string) {

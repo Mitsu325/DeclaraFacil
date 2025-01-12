@@ -32,4 +32,13 @@
       margin-top: 12px;
     }
   }
+
+  .button-align {
+    text-align: center;
+  }
+
+  .divider {
+    margin: 24px 0;
+    border-color: var(--sys-outline-variant);
+  }
 }
