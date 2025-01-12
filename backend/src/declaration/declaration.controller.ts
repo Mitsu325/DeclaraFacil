@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Get,
+  Delete,
 } from '@nestjs/common';
 import { DeclarationService } from './declaration.service';
 import { CreateDeclarationDto } from './dto/create-declaration.dto'; // Certifique-se de que o caminho está correto
@@ -29,7 +30,7 @@ export class DeclarationController {
   @ApiBearerAuth('access-token')
   @Get()
   async getAll() {
-    return this.declarationService.getDeclarations();
+    return await this.declarationService.getDeclarations();
   }
 
   @ApiOperation({
@@ -39,7 +40,7 @@ export class DeclarationController {
   @ApiBearerAuth('access-token')
   @Get('type')
   async getType() {
-    return this.declarationService.getDeclarationsType();
+    return await this.declarationService.getDeclarationsType();
   }
 
   @ApiOperation({
@@ -54,7 +55,7 @@ export class DeclarationController {
   @ApiBearerAuth('access-token')
   @Get(':id')
   async get(@Param() params: { id: string; },) {
-    return this.declarationService.getDeclaration(params.id);
+    return await this.declarationService.getDeclaration(params.id);
   }
 
   @ApiOperation({
@@ -69,7 +70,7 @@ export class DeclarationController {
     @Body() createDeclarationDto: CreateDeclarationDto,
     @Request() req,
   ) {
-    return this.declarationService.createDeclaration(
+    return await this.declarationService.createDeclaration(
       req.user.sub,
       createDeclarationDto,
     );
@@ -93,10 +94,29 @@ export class DeclarationController {
     @Param() params: { id: string; },
     @Request() req,
   ) {
-    return this.declarationService.updateDeclaration(
+    return await this.declarationService.updateDeclaration(
       req.user.is_admin,
       params.id,
       updateDeclarationDto,
     );
+  }
+
+  @ApiOperation({
+    summary: 'Desativar declaração',
+    description:
+      'A declaração é desativada.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    description: 'ID da declaração',
+  })
+  @ApiBearerAuth('access-token')
+  @Delete(':id')
+  async deactivateUser(
+    @Request() req,
+    @Param() params: { id: string; },
+  ) {
+    return await this.declarationService.deactivate(req.user.is_admin, params.id);
   }
 }

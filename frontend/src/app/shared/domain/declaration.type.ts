@@ -7,6 +7,7 @@ export interface Declaration {
   content: string;
   footer: string;
   signatureType: SignatureType;
+  active: boolean;
   createdAt?: Date;
   updatedAt?: Date;
   createdBy?: string;

@@ -1,0 +1,14 @@
+.title,
+p {
+  text-align: center;
+}
+
+.action-group {
+  margin: 32px auto 0;
+
+  button {
+    border-radius: 10px;
+    min-width: 120px;
+    margin-left: 12px;
+  }
+}

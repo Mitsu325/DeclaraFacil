@@ -43,6 +43,9 @@ export class Declaration {
   })
   signatureType: SignatureType;
 
+  @Column({ default: true })
+  is_active: boolean;
+
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamptz',

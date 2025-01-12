@@ -115,7 +115,7 @@ export class RequestService {
     }
 
     const declaration = await this.declarationService.findById(declarationId);
-    if (!declaration) {
+    if (!declaration || !declaration.is_active) {
       throw new ForbiddenException('Declaration not found.');
     }
 
@@ -262,7 +262,7 @@ export class RequestService {
         const declaration = await this.declarationService.findById(
           requestData.declaration.id,
         );
-        if (!declaration) {
+        if (!declaration || !declaration.is_active) {
           console.warn(`Declaration ${requestData.declaration.id} not found`);
           continue;
         }

@@ -39,4 +39,12 @@ export class DeclarationsService {
 
     return this.http.patch<any>(url, payload);
   }
+
+  deleteDeclaration(
+    id: string
+  ): Observable<any> {
+    const url = `${this.apiUrl}/declarations/${id}`;
+
+    return this.http.delete<any>(url);
+  }
 }

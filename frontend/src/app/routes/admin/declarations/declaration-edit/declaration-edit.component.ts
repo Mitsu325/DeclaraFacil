@@ -40,6 +40,7 @@ export class DeclarationEditComponent {
     title: '',
     footer: '',
     signatureType: 'director',
+    active: true,
   };
   public declarationForm: FormGroup;
   public isSubmitting: boolean = false;

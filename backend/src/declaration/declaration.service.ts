@@ -45,6 +45,7 @@ export class DeclarationService {
       content: declaration.content,
       footer: declaration.footer,
       signatureType: declaration.signatureType,
+      active: declaration.is_active,
       createdBy: declaration.user.name,
       createdAt: declaration.createdAt,
       updatedAt: declaration.updatedAt,
@@ -60,7 +61,9 @@ export class DeclarationService {
   }
 
   async getDeclarationsType(): Promise<FormatDeclarationTypes[]> {
-    const declarations = await this.declarationRepository.find();
+    const declarations = await this.declarationRepository.find({
+      where: { is_active: true }
+    });
 
     return declarations.map((declaration) => ({
       id: declaration.id,
@@ -105,7 +108,7 @@ export class DeclarationService {
     const declaration = await this.declarationRepository.findOne({
       where: { id: declarationId },
     });
-    if (!declaration) {
+    if (!declaration || !declaration.is_active) {
       throw new NotFoundException('Declaration not found.');
     }
 
@@ -116,5 +119,30 @@ export class DeclarationService {
     declaration.signatureType = updateDeclarationDto.signatureType ?? declaration.signatureType;
 
     return this.declarationRepository.save(declaration);
+  }
+
+  async deactivate(
+    isAdmin: string,
+    declarationId: string
+  ): Promise<void> {
+    if (!isAdmin) {
+      throw new ForbiddenException(
+        'You do not have permission to perform this action.',
+      );
+    }
+
+    const declaration = await this.declarationRepository.findOne({
+      where: { id: declarationId },
+    });
+    if (!declaration || !declaration.is_active) {
+      throw new NotFoundException('Declaration not found.');
+    }
+
+    await this.declarationRepository.update(declarationId, {
+      is_active: false,
+      type: declaration.type + ' (Desativado)'
+    });
+
+    return;
   }
 }
