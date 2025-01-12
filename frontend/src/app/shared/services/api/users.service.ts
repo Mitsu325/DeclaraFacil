@@ -19,6 +19,12 @@ export class UsersService {
     return this.http.get(`${this.apiUrl}/users/regular`);
   }
 
+  searchUsers(filter: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users/search`, {
+      params: { filter },
+    });
+  }
+
   deleteUser(password: string): Observable<any> {
     const url = `${this.apiUrl}/users/inactivate`;
 

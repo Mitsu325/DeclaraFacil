@@ -1,15 +1,18 @@
 <main class="users-container">
   <h1>Usuários cadastrados</h1>
 
-  @if (!dataSource.length) {
   <p class="description">
-    Não foi cadastrado nunhum usuário.
-  </p>
-  } @else {
-  <p class="description">
-    Visualize os usuários cadastrados.
+    {{ !dataSource.length ? 'Não foi cadastrado nunhum usuário.' : 'Visualize os usuários cadastrados.' }}
   </p>
 
+  <mat-form-field class="fill" class="search-input">
+    <mat-label>Buscar usuário</mat-label>
+    <input matInput type="text" placeholder="Buscar por nome" [(ngModel)]="filter" (ngModelChange)="onSearchChange()"
+      [disabled]="!dataSource.length && !filter.length" />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  @if (dataSource.length) {
   <table mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Nome</th>

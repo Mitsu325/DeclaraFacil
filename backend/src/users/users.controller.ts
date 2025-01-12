@@ -7,11 +7,12 @@ import {
   Request,
   Delete,
   Get,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/auth/public.decorator';
 import { User } from './user.entity';
 import { DeleteAccountDto } from './dto/delete-account.dto';
@@ -29,6 +30,22 @@ export class UsersController {
   @Get()
   async get(@Request() req) {
     return this.usersService.getUser(req.user.sub);
+  }
+
+  @ApiOperation({
+    summary: 'Lista os usuários regulares',
+    description: 'Retorna os dados de usuário regulares, ou seja, que não são admin.',
+  })
+  @ApiQuery({
+    name: 'filter',
+    required: false,
+    type: String,
+    description: 'Filtrar usuários pelo nome (busca parcial, insensível a maiúsculas/minúsculas)',
+  })
+  @ApiBearerAuth('access-token')
+  @Get('search')
+  async findUsers(@Request() req, @Query('filter') filter?: string) {
+    return this.usersService.findUsers(req.user.is_admin, filter);
   }
 
   @ApiOperation({
