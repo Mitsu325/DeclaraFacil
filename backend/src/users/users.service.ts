@@ -72,6 +72,18 @@ export class UsersService {
     return users.map((user) => ({ id: user.id, name: user.name }));
   }
 
+  async getUsers(is_admin: boolean): Promise<Omit<User, 'password'>[]> {
+    if (!is_admin) {
+      throw new ForbiddenException(
+        'You do not have permission to perform this action.',
+      );
+    }
+
+    const users = await this.usersRepository.find({ where: { is_admin: false, is_active: true } });
+
+    return users.map(({ password, ...item }) => ({ ...item }));
+  }
+
   async isAdmin(id: string): Promise<boolean> {
     const user = await this.usersRepository.findOne({ where: { id } });
     return !!user.is_admin;

@@ -15,6 +15,10 @@ export class UsersService {
     return this.http.get(`${this.apiUrl}/users/admin`);
   }
 
+  getUsers(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/users/regular`);
+  }
+
   deleteUser(password: string): Observable<any> {
     const url = `${this.apiUrl}/users/inactivate`;
 

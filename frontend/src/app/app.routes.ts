@@ -19,6 +19,7 @@ import { ProfileComponent } from './routes/requester/profile/profile.component';
 import { SummaryComponent } from './routes/admin/requests/summary/summary.component';
 import { DeclarationEditComponent } from './routes/admin/declarations/declaration-edit/declaration-edit.component';
 import { DeclarationCreateComponent } from './routes/admin/declarations/declaration-create/declaration-create.component';
+import { UsersComponent } from './routes/admin/users/users.component';
 
 export const routes: Routes = [
   {
@@ -112,6 +113,12 @@ export const routes: Routes = [
           },
         ],
       },
+      {
+        path: 'users',
+        component: UsersComponent,
+        title: 'Usuários',
+        canActivate: [AdminGuard],
+      },
 
       // {
       //   path: 'declarations',
@@ -127,11 +134,6 @@ export const routes: Routes = [
       //   path: 'clients',
       //   component: ClientsComponent,
       //   title: 'Clientes',
-      // },
-      // {
-      //   path: 'users',
-      //   component: UsersComponent,
-      //   title: 'Usuários',
       // },
       // {
       //   path: 'other-declarations',

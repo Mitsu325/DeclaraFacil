@@ -42,6 +42,16 @@ export class UsersController {
   }
 
   @ApiOperation({
+    summary: 'Lista os usuários regulares',
+    description: 'Retorna os dados de usuário regulares, ou seja, que não são admin.',
+  })
+  @ApiBearerAuth('access-token')
+  @Get('regular')
+  async getUsers(@Request() req) {
+    return this.usersService.getUsers(req.user.is_admin);
+  }
+
+  @ApiOperation({
     summary: 'Criar um novo usuário',
     description:
       'Cria um novo usuário na plataforma. Se os dados forem válidos, o usuário será registrado e poderá fazer login na plataforma.',
