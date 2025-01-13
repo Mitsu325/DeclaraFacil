@@ -2,10 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatFormField } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexTitleSubtitle, ApexXAxis, NgApexchartsModule } from 'ng-apexcharts';
+import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexPlotOptions, ApexTitleSubtitle, ApexXAxis, NgApexchartsModule } from 'ng-apexcharts';
 import { RequestsService } from '../../../shared/services/api/requests.service';
 import { NgToastService } from 'ng-angular-popup';
 import { TimeFormatPipe } from '../../../core/pipes/time-format.pipe';
+import { MatProgressSpinner, MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 interface RequestOverview {
   totalRequests: number;
@@ -23,6 +24,7 @@ interface RequestOverview {
     MatFormField,
     MatSelectModule,
     TimeFormatPipe,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
@@ -36,14 +38,11 @@ export class DashboardComponent {
     approvalRate: 0,
     averageCompletionTime: 0,
   };
+  barChartIsLoading = true;
+  noRequestsMessage = false;
 
   toast = inject(NgToastService);
 
-  tiposSolicitacoes = [
-    { tipo: 'Financeira', quantidade: 50 },
-    { tipo: 'Documental', quantidade: 30 },
-    { tipo: 'Técnica', quantidade: 40 }
-  ];
   solicitacoesPorDia = [
     { dia: '01', quantidade: 5 },
     { dia: '02', quantidade: 8 },
@@ -57,6 +56,7 @@ export class DashboardComponent {
   barChartOptions: {
     series: ApexAxisChartSeries;
     chart: ApexChart;
+    plotOptions: ApexPlotOptions;
     xaxis: ApexXAxis;
     dataLabels: ApexDataLabels;
     title: ApexTitleSubtitle;
@@ -65,6 +65,11 @@ export class DashboardComponent {
       chart: {
         type: 'bar',
         height: 350,
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true
+        }
       },
       xaxis: {
         categories: [],
@@ -116,28 +121,7 @@ export class DashboardComponent {
 
     this.loadOverview();
 
-    this.barChartOptions = {
-      series: [
-        {
-          name: 'Quantidade',
-          data: this.tiposSolicitacoes.map((item) => item.quantidade),
-        },
-      ],
-      chart: {
-        type: 'bar',
-        height: 350,
-      },
-      xaxis: {
-        categories: this.tiposSolicitacoes.map((item) => item.tipo),
-      },
-      dataLabels: {
-        enabled: true,
-      },
-      title: {
-        text: 'Tipos de Solicitações',
-        align: 'left',
-      },
-    };
+    this.loadRequestsByDeclaration();
 
     this.lineChartOptions = {
       series: [
@@ -196,7 +180,70 @@ export class DashboardComponent {
     });
   }
 
+  loadRequestsByDeclaration() {
+    const [month, year] = this.selectedMonthYear.split('/');
+
+    this.barChartIsLoading = true;
+    this.noRequestsMessage = false;
+
+    this.requestsService.getRequestsByDeclaration(month, year).subscribe({
+      next: (data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          this.barChartOptions = {
+            series: [
+              {
+                name: 'Quantidade',
+                data: data.map((item: any) => item.totalRequests),
+              },
+            ],
+            chart: {
+              type: 'bar',
+              height: 350,
+            },
+            plotOptions: {
+              bar: {
+                horizontal: true
+              }
+            },
+            xaxis: {
+              categories: data.map((item: any) => item.declarationType),
+              labels: {
+                style: {
+                  fontSize: '12px',
+                },
+              },
+            },
+            dataLabels: {
+              enabled: true,
+            },
+            title: {
+              text: '',
+              align: 'left',
+            },
+          };
+
+          this.noRequestsMessage = false;
+
+        } else {
+          this.noRequestsMessage = true;
+        }
+
+        this.barChartIsLoading = false;
+      },
+      error: () => {
+        this.toast.danger(
+          'Tente novamente',
+          'Falha ao carregar os dados de solicitações por declaração',
+          5000
+        );
+
+        this.barChartIsLoading = false;
+      },
+    });
+  }
+
   onMonthYearChange() {
     this.loadOverview();
+    this.loadRequestsByDeclaration();
   }
 }

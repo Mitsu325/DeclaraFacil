@@ -75,6 +75,33 @@ export class RequestController {
   }
 
   @ApiOperation({
+    summary: 'Dados solicitações por tipo de declaração',
+    description:
+      'Obter quantidade de solicitações por tipo de declaração. Apenas o usuário com privilégio de administrador pode visualizar.',
+  })
+  @ApiBearerAuth('access-token')
+  @ApiQuery({
+    name: 'month',
+    description: 'Mês para o filtro (formato: MM)',
+    required: true,
+    type: String,
+  })
+  @ApiQuery({
+    name: 'year',
+    description: 'Ano para o filtro (formato: YYYY)',
+    required: true,
+    type: String,
+  })
+  @Get('overview/by-declaration')
+  async getRequestsByDeclarationType(
+    @Query('month') month: string,
+    @Query('year') year: string,
+    @Request() req,
+  ) {
+    return this.requestService.getRequestsByDeclarationType(req.user.is_admin, month, year);
+  }
+
+  @ApiOperation({
     summary: 'Solicitar uma declaração',
     description:
       'Permite que um usuário solicite a geração de uma nova declaração. O usuário deve estar autenticado para fazer a solicitação e não deve ser um admin.',

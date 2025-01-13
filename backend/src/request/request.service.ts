@@ -166,6 +166,35 @@ export class RequestService {
     };
   }
 
+  async getRequestsByDeclarationType(isAdmin: boolean, month: string, year: string) {
+    if (!isAdmin) {
+      throw new ForbiddenException(
+        'You do not have permission to perform this action',
+      );
+    }
+
+    const startDate = `${year}-${month}-01`;
+    const nextMonth = new Date(Number(year), Number(month) - 1, 1);
+    nextMonth.setMonth(nextMonth.getMonth() + 1);
+    const endDate = new Date(nextMonth.getFullYear(), nextMonth.getMonth(), 0).toISOString().split('T')[0];
+
+    const result = await this.requestRepository
+      .createQueryBuilder('request')
+      .innerJoinAndSelect('request.declaration', 'declaration')
+      .select('request.declaration_id', 'declarationId')
+      .addSelect('declaration.type', 'declarationType')
+      .addSelect('COUNT(request.id)', 'totalRequests')
+      .where('request.createdAt BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .groupBy('request.declaration_id, declaration.type')
+      .getRawMany();
+
+    return result.map((row) => ({
+      declarationId: row.declarationId,
+      declarationType: row.declarationType,
+      totalRequests: parseInt(row.totalRequests, 10),
+    }));
+  }
+
   async createRequest(
     declarationId: string,
     userId: string,
