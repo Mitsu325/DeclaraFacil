@@ -198,4 +198,8 @@ export class UsersService {
       name: anonymizedName,
     });
   }
+
+  async save(user: User) {
+    await this.usersRepository.save(user);
+  }
 }
