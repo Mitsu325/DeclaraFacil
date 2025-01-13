@@ -6,39 +6,23 @@
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" autocomplete="off">
     <mat-form-field class="form-field" appearance="fill">
       <mat-label>Email</mat-label>
-      <input
-        matInput
-        formControlName="email"
-        type="email"
-        placeholder="Insira seu e-mail"
-        autocomplete="off"
-      />
+      <input matInput formControlName="email" type="email" placeholder="Insira seu e-mail" autocomplete="off" />
     </mat-form-field>
 
     <mat-form-field class="form-field" appearance="fill">
       <mat-label>Senha</mat-label>
-      <input
-        matInput
-        formControlName="password"
-        [type]="showPassword ? 'text' : 'password'"
-        placeholder="Insira sua senha"
-        autocomplete="off"
-      />
-      <button
-        mat-icon-button
-        type="button"
-        class="icon-button"
-        (click)="togglePasswordVisibility()"
-      >
+      <input matInput formControlName="password" [type]="showPassword ? 'text' : 'password'"
+        placeholder="Insira sua senha" autocomplete="off" />
+      <button mat-icon-button type="button" class="icon-button" (click)="togglePasswordVisibility()">
         <mat-icon>{{
           showPassword ? "visibility_off" : "visibility"
-        }}</mat-icon>
+          }}</mat-icon>
       </button>
     </mat-form-field>
 
     <button class="button-flat" mat-flat-button color="primary" type="submit">Entrar</button>
   </form>
-  <!-- <p>Para lembrar sua senha, <a routerLink="/">clique aqui.</a></p> -->
+  <p>Para lembrar sua senha, <a routerLink="/forgot-password">clique aqui.</a></p>
   <p>
     Se você ainda não está cadastrado,
     <a routerLink="/register">clique aqui.</a>

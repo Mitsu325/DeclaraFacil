@@ -20,6 +20,8 @@ import { SummaryComponent } from './routes/admin/requests/summary/summary.compon
 import { DeclarationEditComponent } from './routes/admin/declarations/declaration-edit/declaration-edit.component';
 import { DeclarationCreateComponent } from './routes/admin/declarations/declaration-create/declaration-create.component';
 import { UsersComponent } from './routes/admin/users/users.component';
+import { ForgotPasswordComponent } from './routes/auth/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './routes/auth/reset-password/reset-password.component';
 
 export const routes: Routes = [
   {
@@ -38,6 +40,16 @@ export const routes: Routes = [
         title: 'Criar conta',
       },
       { path: 'success', component: SuccessComponent },
+      {
+        path: 'forgot-password',
+        component: ForgotPasswordComponent,
+        title: 'Esqueceu senha',
+      },
+      {
+        path: 'reset-password',
+        component: ResetPasswordComponent,
+        title: 'Recuperar senha',
+      },
     ],
   },
   {
