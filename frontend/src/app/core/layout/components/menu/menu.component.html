@@ -29,6 +29,13 @@
           <a mat-line [routerLink]="['/users']">Usuários</a>
         </div>
       </mat-list-item>
+
+      <mat-list-item>
+        <div class="align-item">
+          <mat-icon aria-hidden="true" aria-label="" fontIcon="bar_chart" class="icon"></mat-icon>
+          <a mat-line [routerLink]="['/dashboard']">Relatório</a>
+        </div>
+      </mat-list-item>
       }
 
       @if (!isAdmin) {

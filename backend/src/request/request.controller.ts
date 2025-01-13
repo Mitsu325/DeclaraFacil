@@ -6,6 +6,7 @@ import {
   Param,
   Body,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { RequestService } from './request.service';
 import {
@@ -13,6 +14,7 @@ import {
   ApiBody,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { GeneratePdfDto } from './dto/generate-pdf.dto';
@@ -43,6 +45,33 @@ export class RequestController {
   @Get('with-declarations')
   async getRequestsWithDeclarations(@Request() req) {
     return this.requestService.getRequestsWithDeclarations(req.user.sub);
+  }
+
+  @ApiOperation({
+    summary: 'Dados gerais de solicitações',
+    description:
+      'Obter dados gerais de solicitações para um mês/ano específico. Apenas o usuário com privilégio de administrador pode visualizar.',
+  })
+  @ApiBearerAuth('access-token')
+  @ApiQuery({
+    name: 'month',
+    description: 'Mês para o filtro (formato: MM)',
+    required: true,
+    type: String,
+  })
+  @ApiQuery({
+    name: 'year',
+    description: 'Ano para o filtro (formato: YYYY)',
+    required: true,
+    type: String,
+  })
+  @Get('overview')
+  async getRequestsOverview(
+    @Query('month') month: string,
+    @Query('year') year: string,
+    @Request() req,
+  ) {
+    return this.requestService.getRequestsOverview(req.user.is_admin, month, year);
   }
 
   @ApiOperation({

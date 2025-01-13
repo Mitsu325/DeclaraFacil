@@ -5,7 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, MoreThan, Not, Repository } from 'typeorm';
+import { Between, IsNull, MoreThan, Not, Repository } from 'typeorm';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import * as PDFDocument from 'pdfkit';
@@ -101,6 +101,69 @@ export class RequestService {
       status: request.status,
       generationDate: request.generation_date,
     }));
+  }
+
+  async getRequestsOverview(isAdmin: boolean, month: string, year: string) {
+    if (!isAdmin) {
+      throw new ForbiddenException(
+        'You do not have permission to perform this action',
+      );
+    }
+
+    const startDate = `${year}-${month}-01`;
+    const nextMonth = new Date(Number(year), Number(month) - 1, 1);
+    nextMonth.setMonth(nextMonth.getMonth() + 1);
+    const endDate = new Date(nextMonth.getFullYear(), nextMonth.getMonth(), 0).toISOString().split('T')[0];
+
+    const totalRequests = await this.requestRepository
+      .createQueryBuilder('request')
+      .where('request.createdAt BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .getCount();
+
+    const pendingRequests = await this.requestRepository
+      .createQueryBuilder('request')
+      .where('request.createdAt BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .andWhere('request.status = :status', { status: 'pending' })
+      .getCount();
+
+    const completedRequests = await this.requestRepository
+      .createQueryBuilder('request')
+      .where('request.createdAt BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .andWhere('request.status = :status', { status: 'completed' })
+      .getCount();
+
+    const rejectedRequests = await this.requestRepository
+      .createQueryBuilder('request')
+      .where('request.createdAt BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .andWhere('request.status = :status', { status: 'rejected' })
+      .getCount();
+
+    const approvalRate = completedRequests + rejectedRequests > 0
+      ? (completedRequests / (completedRequests + rejectedRequests)) * 100
+      : 0;
+
+    const requests = await this.requestRepository
+      .createQueryBuilder('request')
+      .where('request.createdAt BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .andWhere('request.status IN (:...statuses)', { statuses: ['completed', 'rejected'] })
+      .getMany();
+
+    const totalDuration = requests.reduce((acc, request) => {
+      const createdAt = request.createdAt.getTime();
+      const updatedAt = request.updatedAt.getTime();
+      const durationInSeconds = (updatedAt - createdAt) / 1000;
+
+      return acc + durationInSeconds;
+    }, 0);
+
+    const averageCompletionTime = requests.length > 0 ? totalDuration / requests.length : 0;
+
+    return {
+      totalRequests,
+      pendingRequests,
+      approvalRate,
+      averageCompletionTime,
+    };
   }
 
   async createRequest(

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
@@ -21,6 +21,14 @@ export class RequestsService {
 
   getRequestsWithDeclarations(): Observable<any> {
     return this.http.get(`${this.apiUrl}/requests/with-declarations`);
+  }
+
+  getRequestsOverview(month: string, year: string): Observable<any> {
+    const params = new HttpParams()
+      .set('month', month)
+      .set('year', year);
+
+    return this.http.get(`${this.apiUrl}/requests/overview`, { params });
   }
 
   generatePDF(requestIds: string[], directorId: string): Observable<any> {

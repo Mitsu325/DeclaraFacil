@@ -22,6 +22,7 @@ import { DeclarationCreateComponent } from './routes/admin/declarations/declarat
 import { UsersComponent } from './routes/admin/users/users.component';
 import { ForgotPasswordComponent } from './routes/auth/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './routes/auth/reset-password/reset-password.component';
+import { DashboardComponent } from './routes/admin/dashboard/dashboard.component';
 
 export const routes: Routes = [
   {
@@ -129,6 +130,12 @@ export const routes: Routes = [
         path: 'users',
         component: UsersComponent,
         title: 'Usuários',
+        canActivate: [AdminGuard],
+      },
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+        title: 'Relatório',
         canActivate: [AdminGuard],
       },
 

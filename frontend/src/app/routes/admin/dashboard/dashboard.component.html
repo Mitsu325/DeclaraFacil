@@ -1,0 +1,43 @@
+<main class="dashboard">
+  <h1>Visão Geral das Solicitações - {{ selectedMonthYear }}</h1>
+
+  <mat-form-field appearance="fill" class="filter">
+    <mat-label>Filtrar por Mês/Ano</mat-label>
+    <mat-select [(value)]="selectedMonthYear" (selectionChange)="onMonthYearChange()">
+      <mat-option *ngFor="let option of monthYearOptions" [value]="option">{{ option }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="dashboard-cards">
+    <div class="card">
+      <h3>Total de Solicitações</h3>
+      <p>{{ overview.totalRequests }}</p>
+    </div>
+    <div class="card">
+      <h3>Total de Pendentes</h3>
+      <p>{{ overview.pendingRequests }}</p>
+    </div>
+    <div class="card">
+      <h3>Taxa de Aprovação</h3>
+      <p>{{ overview.approvalRate }}%</p>
+    </div>
+    <div class="card">
+      <h3>Tempo Médio de Conclusão</h3>
+      <p>{{ overview.averageCompletionTime | timeFormat }}</p>
+    </div>
+  </div>
+
+  <div class="dashboard-charts">
+    <div class="chart">
+      <h3>Tipo de Solicitações</h3>
+      <apx-chart [series]="barChartOptions.series" [chart]="barChartOptions.chart" [xaxis]="barChartOptions.xaxis"
+        [title]="barChartOptions.title" [dataLabels]="barChartOptions.dataLabels"></apx-chart>
+    </div>
+
+    <div class="chart">
+      <h3>Solicitações por Dia</h3>
+      <apx-chart [series]="lineChartOptions.series" [chart]="lineChartOptions.chart" [xaxis]="lineChartOptions.xaxis"
+        [title]="lineChartOptions.title" [dataLabels]="lineChartOptions.dataLabels"></apx-chart>
+    </div>
+  </div>
+</main>
