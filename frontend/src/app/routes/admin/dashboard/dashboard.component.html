@@ -31,22 +31,23 @@
     <div class="chart">
       <h3>Contagem de Solicitações por Declaração</h3>
       @if (barChartIsLoading) {
-      <mat-spinner></mat-spinner>
-      } @else {
-      @if(noRequestsMessage) {
-      <p>Nenhuma solicitação encontrada para o mês/ano selecionado.</p>
+      <mat-spinner class="pos-center"></mat-spinner>
       } @else {
       <apx-chart [series]="barChartOptions.series" [chart]="barChartOptions.chart" [xaxis]="barChartOptions.xaxis"
         [plotOptions]="barChartOptions.plotOptions" [title]="barChartOptions.title"
         [dataLabels]="barChartOptions.dataLabels"></apx-chart>
       }
-      }
     </div>
 
     <div class="chart">
-      <h3>Solicitações por Dia</h3>
+      <h3>Volume de Solicitações ao Longo do Mês
+      </h3>
+      @if (lineChartIsLoading) {
+      <mat-spinner class="pos-center"></mat-spinner>
+      } @else {
       <apx-chart [series]="lineChartOptions.series" [chart]="lineChartOptions.chart" [xaxis]="lineChartOptions.xaxis"
         [title]="lineChartOptions.title" [dataLabels]="lineChartOptions.dataLabels"></apx-chart>
+      }
     </div>
   </div>
 </main>

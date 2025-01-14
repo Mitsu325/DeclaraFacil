@@ -195,6 +195,37 @@ export class RequestService {
     }));
   }
 
+  async getRequestsByDay(isAdmin: boolean, month: string, year: string) {
+    if (!isAdmin) {
+      throw new ForbiddenException(
+        'You do not have permission to perform this action',
+      );
+    }
+
+    const startDate = new Date(Number(year), Number(month) - 1, 1);
+    const endDate = new Date(Number(year), Number(month), 0);
+    endDate.setHours(23, 59, 59, 999);
+
+    const requests = await this.requestRepository
+      .createQueryBuilder('request')
+      .where('request.createdAt BETWEEN :startDate AND :endDate', {
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+      })
+      .select([
+        'EXTRACT(DAY FROM request.createdAt) AS day',
+        'COUNT(request.id) AS total',
+      ])
+      .groupBy('EXTRACT(DAY FROM request.createdAt)')
+      .orderBy('EXTRACT(DAY FROM request.createdAt)', 'ASC')
+      .getRawMany();
+
+    return requests.map((request: any) => ({
+      date: request.day.padStart(2, '0') + `/${month}`,
+      totalRequests: parseInt(request.total, 10),
+    }));
+  }
+
   async createRequest(
     declarationId: string,
     userId: string,

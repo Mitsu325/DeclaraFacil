@@ -39,6 +39,14 @@ export class RequestsService {
     return this.http.get(`${this.apiUrl}/requests/overview/by-declaration`, { params });
   }
 
+  getRequestsByDay(month: string, year: string): Observable<any> {
+    const params = new HttpParams()
+      .set('month', month)
+      .set('year', year);
+
+    return this.http.get(`${this.apiUrl}/requests/daily`, { params });
+  }
+
   generatePDF(requestIds: string[], directorId: string): Observable<any> {
     const url = `${this.apiUrl}/requests/generate-pdf`;
 
