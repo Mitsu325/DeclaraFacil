@@ -156,7 +156,12 @@ export class UserRegistrationComponent {
     if (this.registerForm.valid) {
       try {
         await axios.post(`${this.apiUrl}/users`, formData);
-        this.router.navigate(['/requests']);
+        // Limpar o formulário e redefinir o estado inicial
+        this.registerForm.reset(); // Reseta os valores do formulário
+        Object.keys(this.registerForm.controls).forEach((controlName) => {
+          this.registerForm.get(controlName)?.setErrors(null); // Remove os erros de validação
+        });
+        this.router.navigate(['/requests/user-registration']);
       } catch (error) {
         this.errorMessage = 'Erro ao criar conta. Tente novamente.';
         console.error('Erro ao criar usuário:', error);
