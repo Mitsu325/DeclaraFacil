@@ -19,6 +19,7 @@ import { ProfileComponent } from './routes/requester/profile/profile.component';
 import { SummaryComponent } from './routes/admin/requests/summary/summary.component';
 import { DeclarationEditComponent } from './routes/admin/declarations/declaration-edit/declaration-edit.component';
 import { DeclarationCreateComponent } from './routes/admin/declarations/declaration-create/declaration-create.component';
+import { UserRegistrationComponent } from './routes/admin/user-registration/user-registration.component';
 
 export const routes: Routes = [
   {
@@ -60,6 +61,13 @@ export const routes: Routes = [
             component: RequestsComponent,
             title: 'Gestão de solicitações',
           },
+
+          {
+            path: 'user-registration',
+            component: UserRegistrationComponent,
+            title: 'Cadastrar usuário',
+          },
+
           {
             path: 'summary',
             component: SummaryComponent,
