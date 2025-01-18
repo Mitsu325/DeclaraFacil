@@ -12,6 +12,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgxMaskDirective } from 'ngx-mask';
 import { environment } from '../../../../environments/environment';
 import { MatIconModule } from '@angular/material/icon';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-register',
@@ -46,7 +47,8 @@ export class UserRegistrationComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private toast: NgToastService
   ) {
     this.registerForm = this.fb.group(
       {
@@ -161,6 +163,7 @@ export class UserRegistrationComponent {
         Object.keys(this.registerForm.controls).forEach((controlName) => {
           this.registerForm.get(controlName)?.setErrors(null); // Remove os erros de validação
         });
+        this.toast.success('Usuário cadastrado com sucesso!', 'Fechar', 4000);
         this.router.navigate(['/requests/user-registration']);
       } catch (error) {
         this.errorMessage = 'Erro ao criar conta. Tente novamente.';
