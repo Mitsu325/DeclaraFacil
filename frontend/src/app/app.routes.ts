@@ -23,6 +23,7 @@ import { UsersComponent } from './routes/admin/users/users.component';
 import { ForgotPasswordComponent } from './routes/auth/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './routes/auth/reset-password/reset-password.component';
 import { DashboardComponent } from './routes/admin/dashboard/dashboard.component';
+import { UserRegistrationComponent } from './routes/admin/user-registration/user-registration.component';
 
 export const routes: Routes = [
   {
@@ -74,6 +75,13 @@ export const routes: Routes = [
             component: RequestsComponent,
             title: 'Gestão de solicitações',
           },
+
+          {
+            path: 'user-registration',
+            component: UserRegistrationComponent,
+            title: 'Cadastrar usuário',
+          },
+
           {
             path: 'summary',
             component: SummaryComponent,

@@ -1,0 +1,186 @@
+<main class="register-group">
+    <h1>Cadastrar Usuário</h1>
+  
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" autocomplete="off">
+      <div class="register-form">
+        <!-- Campos existentes -->
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Nome Completo</mat-label>
+          <input matInput formControlName="name" placeholder="Insira seu nome" />
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            formControlName="email"
+            type="email"
+            placeholder="Insira seu e-mail"
+          />
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>CPF</mat-label>
+          <input
+            matInput
+            formControlName="cpf"
+            placeholder="Insira seu CPF"
+            mask="000.000.000-00"
+          />
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>RG</mat-label>
+          <input
+            matInput
+            formControlName="rg"
+            placeholder="Insira seu RG"
+            mask="00.000.000-0"
+          />
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Órgão Emissor</mat-label>
+          <input
+            matInput
+            formControlName="issuing_agency"
+            placeholder="Insira o órgão emissor"
+          />
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Código Postal</mat-label>
+          <input
+            matInput
+            formControlName="postal_code"
+            placeholder="Insira seu código postal"
+            mask="00000-000"
+          />
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Rua</mat-label>
+          <input matInput formControlName="street" placeholder="Insira sua rua" />
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Número</mat-label>
+          <input
+            matInput
+            formControlName="house_number"
+            placeholder="Insira o número da casa"
+          />
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Complemento</mat-label>
+          <input
+            matInput
+            formControlName="complement"
+            placeholder="Insira o complemento"
+          />
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Bairro</mat-label>
+          <input
+            matInput
+            formControlName="neighborhood"
+            placeholder="Insira seu bairro"
+          />
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Cidade</mat-label>
+          <input
+            matInput
+            formControlName="city"
+            placeholder="Insira sua cidade"
+          />
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="state" placeholder="Selecione o estado">
+            <mat-option *ngFor="let state of states" [value]="state">
+              {{ state }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Senha</mat-label>
+          <div class="password-input">
+            <input
+              matInput
+              formControlName="password"
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="Insira sua senha"
+            />
+            <button
+              mat-icon-button
+              type="button"
+              (click)="togglePasswordVisibility()"
+              class="password-toggle-button"
+            >
+              <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+        </mat-form-field>
+  
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Confirme sua Senha</mat-label>
+          <div class="password-input">
+            <input
+              matInput
+              formControlName="confirmPassword"
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              placeholder="Confirme sua senha"
+            />
+            <button
+              mat-icon-button
+              type="button"
+              (click)="toggleConfirmPasswordVisibility()"
+              class="password-toggle-button"
+            >
+              <mat-icon>{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+          <mat-error
+            *ngIf="registerForm.hasError('passwordMismatch') && (registerForm.get('password')?.touched || registerForm.get('confirmPassword')?.touched)"
+          >
+            Senhas não conferem
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- Campo Administrador -->
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Administrador</mat-label>
+          <mat-select formControlName="is_admin" (selectionChange)="onAdminChange($event)">
+            <mat-option [value]="false">Não</mat-option>
+            <mat-option [value]="true">Sim</mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <!-- Campo Cargo (habilitado apenas quando "Sim" é selecionado para Administrador) -->
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Cargo</mat-label>
+          <input
+            matInput
+            formControlName="cargo"
+            placeholder="Insira o cargo do administrador"
+            [attr.disabled]="registerForm.get('is_admin')?.value !== true ? true : null"
+          />
+        </mat-form-field>
+  
+        <!-- Botão de envio -->
+        <button class="button-flat" mat-flat-button color="primary" type="submit" [disabled]="registerForm.invalid">
+          Criar Conta
+        </button>
+      </div>
+    </form>
+  </main>
