@@ -77,17 +77,31 @@ export const routes: Routes = [
           },
 
           {
-            path: 'user-registration',
-            component: UserRegistrationComponent,
-            title: 'Cadastrar usuário',
-          },
-
-          {
             path: 'summary',
             component: SummaryComponent,
             title: 'Declarações geradas',
           },
         ],
+      },
+      {
+        path: 'user-management',
+        title: 'Gerenciamento de usuários',
+        canActivate: [AdminGuard],
+        children: [
+
+          {
+            path: 'user-registration',
+            component: UserRegistrationComponent,
+            title: 'Cadastrar usuário',
+          },
+          
+          {
+            path: 'users',
+            component: UsersComponent,
+            title: 'Usuários',
+            canActivate: [AdminGuard],
+          },
+        ]
       },
       {
         path: 'completed-declarations',
@@ -134,12 +148,7 @@ export const routes: Routes = [
           },
         ],
       },
-      {
-        path: 'users',
-        component: UsersComponent,
-        title: 'Usuários',
-        canActivate: [AdminGuard],
-      },
+
       {
         path: 'dashboard',
         component: DashboardComponent,
