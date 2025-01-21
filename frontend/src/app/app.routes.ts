@@ -84,19 +84,19 @@ export const routes: Routes = [
         ],
       },
       {
-        path: 'user-management',
+        path: 'management',
         title: 'Gerenciamento de usuários',
         canActivate: [AdminGuard],
         children: [
 
           {
-            path: 'user-registration',
+            path: 'create-acount',
             component: UserRegistrationComponent,
             title: 'Cadastrar usuário',
           },
           
           {
-            path: 'users',
+            path: 'search',
             component: UsersComponent,
             title: 'Usuários',
             canActivate: [AdminGuard],
